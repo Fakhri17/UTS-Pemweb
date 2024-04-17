@@ -13,7 +13,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-0 py-3 shadow">
     <div class="container-xl">
       <!-- Logo -->
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <img src="https://preview.webpixels.io/web/img/logos/clever-light.svg" class="h-4" alt="...">
       </a>
       <!-- Navbar toggle -->
@@ -25,7 +25,7 @@
         <div class="navbar-nav ms-auto">
           <a class="nav-item nav-link fw-bold" href="/" style="font-size: 16px;">Home</a>
           <a class="nav-item nav-link fw-bold active" href="/surah.html" style="font-size: 16px;">Surah</a>
-          <a class="nav-item nav-link fw-bold" href="/random.html" style="font-size: 16px;">Random Ayat</a>
+          <a class="nav-item nav-link fw-bold" href="/random-ayat.html" style="font-size: 16px;">Random Ayat</a>
         </div>
       </div>
     </div>
@@ -39,22 +39,15 @@
             <h1 class="text-center mb-4">Surah</h1>
           </div>
           <template x-if="loading">
-            <div class="d-flex justify-content-center">
-              <div class="space-x">
-      
-                <div class="spinner-grow text-blue" role="status"></div>
-                <div class="spinner-grow text-azure" role="status"></div>
-                <div class="spinner-grow text-indigo" role="status"></div>
-                <div class="spinner-grow text-purple" role="status"></div>
-                <div class="spinner-grow text-pink" role="status"></div>
-                <div class="spinner-grow text-red" role="status"></div>
-                <div class="spinner-grow text-orange" role="status"></div>
-                <div class="spinner-grow text-yellow" role="status"></div>
-                <div class="spinner-grow text-lime" role="status"></div>
-                <div class="spinner-grow text-green" role="status"></div>
-                <div class="spinner-grow text-teal" role="status"></div>
-                <div class="spinner-grow text-cyan" role="status"></div>
-      
+            <div class="loading-spinner">
+              <h2 class="text-center mb-3">Loading Content</h2>
+              <div class="space-x justify-content-center">
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
               </div>
             </div>
           </template>
@@ -65,7 +58,7 @@
                   <a :href="`/detail-surah.html?surah=${item.number}`" class="card">
                     <div class="card-body" >
                       <h3 class="card-title" x-text="`Surah ${item.name} (${item.translation})`"></h3>
-                      
+                      <p class="text-secondary" x-text="revelation"></p>
                     </div>
                   </a>
                 </div>
@@ -77,15 +70,20 @@
       </div>
     </div>
   </section>
+
+  <footer class="py-3 my-4 bg-dark">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="/" class="nav-link px-2 text-white">Home</a></li>
+      <li class="nav-item"><a href="/surah.html" class="nav-link px-2 text-white">Surah</a></li>
+      <li class="nav-item"><a href="/random-ayat.html" class="nav-link px-2 text-white">Random Ayat</a></li>
+    </ul>
+    <p class="text-center text-white">© 2024 Quran Pemweb</p>
+  </footer>
+
+  
   <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
   <script>
-    //const url_string = window.location.href;
-    //console.log(url_string);
-    //var url = new URL(url_string);
-    //var c = url.searchParams.get("halo");
-    //console.log(c);
-
-    // get api from https://symbolsofindonesia.vercel.app/provinces/200
+    // get api from https://quran-api-id.vercel.app/surahs/
     function allSurah() {
       return {
         surah: [],

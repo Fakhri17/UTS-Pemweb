@@ -17,25 +17,25 @@
         <img src="https://preview.webpixels.io/web/img/logos/clever-light.svg" class="h-4" alt="...">
       </a>
       <!-- Navbar toggle -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <!-- Collapse -->
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto">
           <a class="nav-item nav-link fw-bold" href="/" style="font-size: 16px;">Home</a>
-          <a class="nav-item nav-link fw-bold active" href="/surah.html" style="font-size: 16px;">Surah</a>
-          <a class="nav-item nav-link fw-bold" href="/random-ayat.html" style="font-size: 16px;">Random Ayat</a>
+          <a class="nav-item nav-link fw-bold" href="/surah.html" style="font-size: 16px;">Surah</a>
+          <a class="nav-item nav-link fw-bold active" href="/random-ayat.html" style="font-size: 16px;">Random Ayat</a>
         </div>
       </div>
     </div>
   </nav>
-  
-  
+
+
   <section class="my-5">
     <div class="container">
-      
-      <div x-data="detailSurah()" x-init="connect()">
+      <div x-data="randomSurah()" x-init="connect()">
         <template x-if="loading">
           <div class="loading-spinner">
             <h2 class="text-center mb-3">Loading Content</h2>
@@ -49,14 +49,48 @@
             </div>
           </div>
         </template>
-        <template x-if="!loading">
+        <template x-if="!loading && surah.name">
           <div class="row">
             <div class="col-12">
-              <h1 class="text-center" x-text="`Surah ${surah.name}`"></h1>
+              <h1 class="text-center mb-5" x-text="`Surah ${surah.name}`"></h1>
+              <h2 class="" x-text="ayah.arab"></h2>
+              <h4 class="text-secondary mt-3" x-text="`Artinya: ${ayah.translation}`"></h4>
+              <div class="audio my-3">
+                <audio controls class="shadow rounded-4">
+                  <source :src="ayah.audio.muhammadjibreel" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+              <div class="tafsir mt-4">
+                <div class="my-3">
+                  <h3 class="mb-0">Tafsir Kemenag</h3>
+                  <p x-text="ayah.tafsir.kemenag.short"></p>
+                </div>
+                <div class="my-3">
+                  <h3 class="mb-0">Tafsir Quraish</h3>
+                  <p x-text="ayah.tafsir.quraish"></p>
+                </div>
+                <div class="my-3">
+                  <h3 class="mb-0">Tafsir Jalalayn</h3>
+                  <p x-text="ayah.tafsir.jalalayn"></p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-1">
+              <button class="btn btn-primary mx-auto d-block" onclick="reloadPage()">Reload</button>
+            </div>
+          </div>
+          
+        </template>
+        <template x-if="!loading && !surah.name">
+          <div class="row">
+            <div class="col-12">
+              <h1 class="text-center mb-3">Loading Surah Data...</h1>
             </div>
           </div>
         </template>
       </div>
+      
     </div>
   </section>
 
@@ -68,34 +102,48 @@
     </ul>
     <p class="text-center text-white">© 2024 Quran Pemweb</p>
   </footer>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
   <script>
-    const url_string = window.location.href;
-    console.log(url_string);
-    var url = new URL(url_string);
-    var surah = url.searchParams.get("surah");
-    console.log(surah);
-
-    // get api from  https://quran-api-id.vercel.app/surahs/{surah}
-    function detailSurah() {
+    // get api from https://quran-api-id.vercel.app/surahs/{surah}
+    function randomSurah() {
       return {
+        ayah: [],
+        noSurah: 0,
         surah: [],
         loading: true,
         connect() {
-          fetch(`https://quran-api-id.vercel.app/surahs/${surah}`)
+          fetch(`https://quran-api-id.vercel.app/random`)
             .then(response => response.json())
             .then(data => {
-              this.surah = data;
+              this.ayah = data;
               this.loading = false;
-              console.log(this.surah);
+              this.noSurah = data.number.inSurah;
+              this.fetchSurah(this.noSurah);
+              console.log(this.ayah);
+              console.log(this.noSurah);
             })
             .catch(error => {
               console.error('Error fetching data:', error);
               this.loading = false;
             });
+        },
+        fetchSurah(noSurah) {
+          fetch(`https://quran-api-id.vercel.app/surahs/${noSurah}`)
+            .then(response => response.json())
+            .then(data => {
+              this.surah = data;
+              console.log(this.surah);
+            })
+            .catch(error => {
+              console.error('Error fetching data:', error);
+            });
         }
-      }
+      };
+    }
+
+    function reloadPage() {
+      location.reload();
     }
 
   </script>
