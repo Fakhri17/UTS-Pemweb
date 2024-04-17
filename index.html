@@ -10,7 +10,35 @@
 </head>
 
 <body>
-  <h1 x-data="{ message: 'I ❤️ Alpine' }" x-text="message"></h1>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-0 py-3 shadow">
+    <div class="container-xl">
+      <!-- Logo -->
+      <a class="navbar-brand" href="#">
+        <img src="https://preview.webpixels.io/web/img/logos/clever-light.svg" class="h-4" alt="...">
+      </a>
+      <!-- Navbar toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-item nav-link fw-bold active" href="/" style="font-size: 16px;">Home</a>
+          <a class="nav-item nav-link fw-bold" href="/surah.html" style="font-size: 16px;">Surah</a>
+          <a class="nav-item nav-link fw-bold" href="/random.html" style="font-size: 16px;">Random Ayat</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- End Navbar -->
+
+  <section class="py-5 my-5">
+    <div class="container">
+      <h1 class="text-center">Content Is Here</h1>
+    </div>
+  </section>
+
   <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
 </body>
 

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-0 py-3 shadow">
+    <div class="container-xl">
+      <!-- Logo -->
+      <a class="navbar-brand" href="#">
+        <img src="https://preview.webpixels.io/web/img/logos/clever-light.svg" class="h-4" alt="...">
+      </a>
+      <!-- Navbar toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-item nav-link fw-bold" href="/" style="font-size: 16px;">Home</a>
+          <a class="nav-item nav-link fw-bold active" href="/surah.html" style="font-size: 16px;">Surah</a>
+          <a class="nav-item nav-link fw-bold" href="/random.html" style="font-size: 16px;">Random Ayat</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  
+  <section class="my-5">
+    <div class="container">
+      
+      <div x-data="detailSurah()" x-init="connect()">
+        <template x-if="loading">
+          <div class="d-flex justify-content-center">
+            <div class="space-x">
+    
+              <div class="spinner-grow text-blue" role="status"></div>
+              <div class="spinner-grow text-azure" role="status"></div>
+              <div class="spinner-grow text-indigo" role="status"></div>
+              <div class="spinner-grow text-purple" role="status"></div>
+              <div class="spinner-grow text-pink" role="status"></div>
+              <div class="spinner-grow text-red" role="status"></div>
+              <div class="spinner-grow text-orange" role="status"></div>
+              <div class="spinner-grow text-yellow" role="status"></div>
+              <div class="spinner-grow text-lime" role="status"></div>
+              <div class="spinner-grow text-green" role="status"></div>
+              <div class="spinner-grow text-teal" role="status"></div>
+              <div class="spinner-grow text-cyan" role="status"></div>
+    
+            </div>
+          </div>
+        </template>
+        <template x-if="!loading">
+          <div class="row">
+            <div class="col-12">
+              <h1 class="text-center" x-text="`Surah ${surah.name}`"></h1>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+  <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+  <script>
+    const url_string = window.location.href;
+    console.log(url_string);
+    var url = new URL(url_string);
+    var surah = url.searchParams.get("surah");
+    console.log(surah);
+
+    // get api from https://symbolsofindonesia.vercel.app/provinces/200
+    function detailSurah() {
+      return {
+        surah: [],
+        loading: true,
+        connect() {
+          fetch(`https://quran-api-id.vercel.app/surahs/${surah}`)
+            .then(response => response.json())
+            .then(data => {
+              this.surah = data;
+              this.loading = false;
+              console.log(this.surah);
+            })
+            .catch(error => {
+              console.error('Error fetching data:', error);
+              this.loading = false;
+            });
+        }
+      }
+    }
+
+  </script>
+</body>
+
+</html>
