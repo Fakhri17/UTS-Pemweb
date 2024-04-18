@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <title>Bootstrap demo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-0 py-3 shadow">
+    <div class="container-xl">
+      <!-- Logo -->
+      <a class="navbar-brand" href="/">
+        <img src="https://preview.webpixels.io/web/img/logos/clever-light.svg" class="h-4" alt="...">
+      </a>
+      <!-- Navbar toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-item nav-link fw-bold" href="/" style="font-size: 16px;">Home</a>
+          <a class="nav-item nav-link fw-bold" href="/surah.html" style="font-size: 16px;">Surah</a>
+          <a class="nav-item nav-link fw-bold" href="/random-ayat.html" style="font-size: 16px;">Random Ayat</a>
+          <a class="nav-item nav-link fw-bold active" href="/jadwal-sholat.html" style="font-size: 16px;">Jadwal Sholat</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="my-5">
+    <div class="container">
+      <div x-data="jadwalSholat()" x-init="connect()">
+        <template x-if="loading">
+          <!-- Loading spinner template -->
+          <div class="loading-spinner">
+            <h2 class="text-center mb-3">Loading Content</h2>
+            <div class="space-x justify-content-center">
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+            </div>
+          </div>
+        </template>
+        <template x-if="!loading">
+          <!-- Main content template -->
+          <div class="mb-3">
+            <div class="form-label">Select</div>
+            <input type="text" class="form-control mb-3" x-model="search" placeholder="Cari Kota">
+            <select class="form-select" @change="jadwal($event.target.value)">
+              <option selected>Tekan Untuk Melihat</option>
+              <template x-for="city in filteredCities" :key="city.id">
+                <option x-text="city.lokasi" :value="city.id"></option>
+              </template>
+            </select>            
+            <div class="mt-4">
+              <!-- loading lokasi & jadwal sholat -->
+              <template x-if="loadingJadwal">
+                <h2 class="text-center mb-3">Pilih Wilayah</h2>
+              </template>
+              <template x-if="!loadingJadwal">
+                <div>
+                  <h2 x-text="lokasi" class="text-center my-3"></h2>
+
+                  <div class="table-responsive">
+                    <table class="table table-vcenter">
+                      <thead>
+                        <tr>
+                          <th>Tanggal</th>
+                          <th>imsak</th>
+                          <th>Subuh</th>
+                          <th>Terbit</th>
+                          <th>Dhuha</th>
+                          <th>Dzuhur</th>
+                          <th>Ashar</th>
+                          <th>Maghrib</th>
+                          <th>Isya</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <template x-for="jadwal in jadwalSholat" :key="jadwal.date">
+                          <tr>
+                            <td x-text="jadwal.tanggal"></td>
+                            <td x-text="jadwal.imsak"></td>
+                            <td x-text="jadwal.subuh"></td>
+                            <td x-text="jadwal.terbit"></td>
+                            <td x-text="jadwal.dhuha"></td>
+                            <td x-text="jadwal.dzuhur"></td>
+                            <td x-text="jadwal.ashar"></td>
+                            <td x-text="jadwal.maghrib"></td>
+                            <td x-text="jadwal.isya"></td>
+                          </tr>
+                        </template>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-3 my-4 bg-dark">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="/" class="nav-link px-2 text-white">Home</a></li>
+      <li class="nav-item"><a href="/surah.html" class="nav-link px-2 text-white">Surah</a></li>
+      <li class="nav-item"><a href="/random-ayat.html" class="nav-link px-2 text-white">Random Ayat</a></li>
+    </ul>
+    <p class="text-center text-white">© 2024 Quran Pemweb</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+    // get api from https://api.myquran.com/v2/sholat/kota/cari/{nama_kota}
+    function jadwalSholat() {
+      return {
+        allCity: [],
+        jadwalSholat: [],
+        loading: true,
+        loadingJadwal: true,
+        lokasi: '',
+        search: '',
+        selectedCity: '',
+        connect() {
+          fetch('https://api.myquran.com/v2/sholat/kota/semua')
+            .then(response => response.json())
+            .then(data => {
+              this.allCity = data.data;
+              this.loading = false;
+            })
+            .catch(error => {
+              console.error('Error fetching data:', error);
+              this.loading = false;
+            });
+        },
+        jadwal(id) {
+          this.loadingJadwal = true;
+          fetch(`https://api.myquran.com/v2/sholat/jadwal/${id}/2024/06`)
+            .then(response => response.json())
+            .then(data => {
+              this.jadwalSholat = data.data.jadwal;
+              this.lokasi = data.data.lokasi;
+              this.loadingJadwal = false;
+              console.log(this.lokasi);
+            })
+            .catch(error => {
+              console.error('Error fetching data:', error);
+              this.loadingJadwal = false;
+            });
+        },
+       filteredCities() {
+          return this.allCity.filter(city => {
+            return city.lokasi.toLowerCase().includes(this.search.toLowerCase());
+          });
+        },
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>
