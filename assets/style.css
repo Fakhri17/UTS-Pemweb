@@ -1,0 +1,11 @@
+.circle-border {
+  width: 38px; /* adjust the width and height as needed */
+  height: 38px;
+  border-radius: 50%; /* this creates the circular shape */
+  border: 2px solid black; /* adjust the border thickness and color as needed */
+  /* center vertical horizontal text */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}

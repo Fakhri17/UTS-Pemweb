@@ -57,8 +57,10 @@
                 <div class="col-12 col-md-4 mb-3">
                   <a :href="`/detail-surah.html?surah=${item.number}`" class="card">
                     <div class="card-body" >
-                      <h3 class="card-title" x-text="`Surah ${item.name} (${item.translation})`"></h3>
-                      <p class="text-secondary" x-text="revelation"></p>
+                      <h3 class="card-title mb-0" x-text="`${item.number}. Surah ${item.name} (${item.translation})`"></h3>
+                      <span class="text-secondary" x-text="item.revelation"></span>
+                      <span class="text-secondary"> - </span>
+                      <span class="text-secondary" x-text="`(${item.numberOfAyahs}) Ayat`"></span>
                     </div>
                   </a>
                 </div>
