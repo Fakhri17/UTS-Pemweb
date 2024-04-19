@@ -27,7 +27,8 @@
           <a class="nav-item nav-link fw-bold" href="/" style="font-size: 16px;">Home</a>
           <a class="nav-item nav-link fw-bold" href="/surah.html" style="font-size: 16px;">Surah</a>
           <a class="nav-item nav-link fw-bold" href="/random-ayat.html" style="font-size: 16px;">Random Ayat</a>
-          <a class="nav-item nav-link fw-bold active" href="/jadwal-sholat.html" style="font-size: 16px;">Jadwal Sholat</a>
+          <a class="nav-item nav-link fw-bold active" href="/jadwal-sholat.html" style="font-size: 16px;">Jadwal
+            Sholat</a>
         </div>
       </div>
     </div>
@@ -60,7 +61,7 @@
               <template x-for="city in filteredCities" :key="city.id">
                 <option x-text="city.lokasi" :value="city.id"></option>
               </template>
-            </select>            
+            </select>
             <div class="mt-4">
               <!-- loading lokasi & jadwal sholat -->
               <template x-if="loadingJadwal">
@@ -124,6 +125,10 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script>
     // get api from https://api.myquran.com/v2/sholat/kota/cari/{nama_kota}
+    var getYearNumber = new Date().getFullYear().toString();
+    var getMonth= new Date().getMonth() + 1;
+    var monthZero = getMonth.toString().padStart(2, '0');
+
     function jadwalSholat() {
       return {
         allCity: [],
@@ -147,7 +152,7 @@
         },
         jadwal(id) {
           this.loadingJadwal = true;
-          fetch(`https://api.myquran.com/v2/sholat/jadwal/${id}/2024/06`)
+          fetch(`https://api.myquran.com/v2/sholat/jadwal/${id}/${getYearNumber}/${monthZero}`)
             .then(response => response.json())
             .then(data => {
               this.jadwalSholat = data.data.jadwal;
@@ -160,7 +165,7 @@
               this.loadingJadwal = false;
             });
         },
-       filteredCities() {
+        filteredCities() {
           return this.allCity.filter(city => {
             return city.lokasi.toLowerCase().includes(this.search.toLowerCase());
           });
