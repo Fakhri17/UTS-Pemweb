@@ -34,7 +34,6 @@
     </div>
   </nav>
 
-
   <section class="my-5">
     <div class="container">
 
@@ -62,20 +61,19 @@
                 <span class="text-secondary h3" x-text="`(${surah.numberOfAyahs}) Ayat`"></span>
               </div>
               <div class="my-5">
-                <div x-show="surah.name != 'Al-Fatihah'" class="my-5">
+                <div x-show="surah.name != 'Al-Fatihah'" class="my-3" :class="isPlaying(`bismillah`) ? 'bg-success-lt rounded-4 p-3' : 'p-3'">
                   <h2 class="" x-text="surah.bismillah.arab"></h2>
                   <div class="audio my-3">
-                    <button id="bismillah" class="btn"
-                      @click="playAyahs('bismillah', surah.bismillah.audio.muhammadjibreel)">Dengarkan Ayat</button>
+                    <button id="bismillah" class="btn" @click="playAyahs(surah.bismillah.audio.muhammadjibreel, `bismillah`)"
+                      x-text="isPlaying(`bismillah`) ? 'Hentikan' : 'Dengarkan'">/button>
+
                   </div>
                   <h4 class="text-secondary mt-3" x-text="`Artinya: ${surah.bismillah.translation}`"></h4>
                 </div>
                 <template x-for="ayahs in surah.ayahs" :key="ayahs.number.inSurah">
                   <div>
-                    <div class="my-5">
+                    <div class="my-3" :class="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'bg-success-lt rounded-4 p-3' : 'p-3'">
                       <div class="d-flex">
-
-
                         <span class="h2" x-text="ayahs.arab"></span>
                         <div class="circle-border ms-3">
                           <span class="h2" x-text="changeToArabic(ayahs.number.inSurah)"></span>
@@ -83,7 +81,11 @@
                       </div>
                       <div class="audio my-3">
                         <button :id="`ayah_${ayahs.number.inSurah}`" class="btn"
-                          @click="playAyahs(`ayah_${ayahs.number.inSurah}`, ayahs.audio.muhammadjibreel)">Dengarkan Ayat</button>
+                          @click="playAyahs(ayahs.audio.muhammadjibreel, `ayah_${ayahs.number.inSurah}`)"
+                          x-text="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'Hentikan' : 'Dengarkan'">
+                        </button>
+
+
                       </div>
                       <h4 class="text-secondary mt-3" x-text="`Artinya: ${ayahs.translation}`"></h4>
                     </div>
@@ -120,6 +122,9 @@
       return {
         surah: [],
         loading: true,
+        currentPlayAyah: null,
+        playingAyahId: null, // Menyimpan ID elemen yang sedang diputar
+
         connect() {
           fetch(`https://quran-api-id.vercel.app/surahs/${surah}`)
             .then(response => response.json())
@@ -132,9 +137,31 @@
               console.error('Error fetching data:', error);
               this.loading = false;
             });
-        }
-      }
+        },
+
+        playAyahs(url, ayahId) { // Menerima ID elemen sebagai argumen
+          if (this.currentPlayAyah) {
+            this.currentPlayAyah.pause();
+            if (this.playingAyahId === ayahId) {
+              this.playingAyahId = null; // Jika elemen yang sedang diputar dihentikan, reset ID
+              return;
+            }
+          }
+          this.currentPlayAyah = new Audio(url);
+          this.currentPlayAyah.play();
+          this.playingAyahId = ayahId; // Atur ID elemen yang sedang diputar
+          this.currentPlayAyah.onended = () => {
+            this.playingAyahId = null; // Reset ID saat audio selesai diputar
+          };
+        },
+
+        isPlaying(ayahId) { // Memeriksa apakah elemen dengan ID tertentu sedang diputar
+          return this.playingAyahId === ayahId;
+        },
+      };
     }
+
+
 
   </script>
   <script src="./assets/script.js"></script>
