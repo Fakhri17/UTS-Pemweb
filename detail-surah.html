@@ -122,45 +122,52 @@
       return {
         surah: [],
         loading: true,
-        currentPlayAyah: null,
         playingAyahId: null, // Menyimpan ID elemen yang sedang diputar
-
+    
         connect() {
           fetch(`https://quran-api-id.vercel.app/surahs/${surah}`)
             .then(response => response.json())
             .then(data => {
               this.surah = data;
               this.loading = false;
-              console.log(this.surah);
             })
             .catch(error => {
               console.error('Error fetching data:', error);
               this.loading = false;
             });
         },
-
-        playAyahs(url, ayahId) { // Menerima ID elemen sebagai argumen
-          if (this.currentPlayAyah) {
-            this.currentPlayAyah.pause();
+    
+        playAyahs(url, ayahId) {
+          try {
             if (this.playingAyahId === ayahId) {
-              this.playingAyahId = null; // Jika elemen yang sedang diputar dihentikan, reset ID
+              this.currentPlayAyah.pause();
+              this.playingAyahId = null;
               return;
             }
+    
+            if (this.currentPlayAyah) {
+              this.currentPlayAyah.pause();
+            }
+    
+            this.currentPlayAyah = new Audio(url);
+            this.currentPlayAyah.play();
+            this.playingAyahId = ayahId;
+    
+            this.currentPlayAyah.onended = () => {
+              this.playingAyahId = null;
+            };
+          } catch (error) {
+            console.error('Error playing audio:', error);
+            this.playingAyahId = null;
           }
-          this.currentPlayAyah = new Audio(url);
-          this.currentPlayAyah.play();
-          this.playingAyahId = ayahId; // Atur ID elemen yang sedang diputar
-          this.currentPlayAyah.onended = () => {
-            this.playingAyahId = null; // Reset ID saat audio selesai diputar
-          };
         },
-
-        isPlaying(ayahId) { // Memeriksa apakah elemen dengan ID tertentu sedang diputar
+    
+        isPlaying(ayahId) {
           return this.playingAyahId === ayahId;
         },
       };
     }
-
+    
 
 
   </script>
