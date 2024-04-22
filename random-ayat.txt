@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-0 py-3 shadow">
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark px-0 py-3 shadow">
     <div class="container">
       <!-- Logo -->
       <a class="navbar-brand" href="/">

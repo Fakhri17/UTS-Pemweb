@@ -25,203 +25,210 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg px-0 py-2 shadow bg-white fixed-top">
-    <div class="container">
-      <!-- Logo -->
-      <a class="navbar-brand" href="/">
-        <img src="./assets/images/logo.png" class="h-5" alt="...">
-      </a>
-      <!-- Navbar toggle -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <!-- Collapse -->
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto">
-          <a class="nav-item nav-link fw-medium hover-nav" href="/" style="font-size: 14px;">Home</a>
-          <a class="nav-item nav-link fw-medium hover-nav" href="/tentang-kami.html" style="font-size: 14px;">Tentang
-            Kami</a>
-          <a class="nav-item nav-link fw-medium hover-nav" href="/surah.html" style="font-size: 14px;">Surah</a>
-          <a class="nav-item nav-link fw-medium hover-nav" href="/jadwal-sholat.html" style="font-size: 14px;">Jadwal
-            Sholat</a>
-          <a class="nav-item nav-link fw-medium hover-nav" href="/kontak-kami.html" style="font-size: 14px;">Kontak
-            Kami</a>
+  <main>
+    <header class="navbar navbar-expand-lg px-0 py-2 shadow bg-white fixed-top">
+      <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="/">
+          <img src="./assets/images/logo.png" class="h-5" alt="...">
+        </a>
+        <!-- Navbar toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <div class="navbar-nav ms-auto">
+            <a class="nav-item nav-link fw-medium hover-nav" href="/" style="font-size: 14px;">Home</a>
+            <a class="nav-item nav-link fw-medium hover-nav" href="/tentang-kami.html" style="font-size: 14px;">Tentang
+              Kami</a>
+            <a class="nav-item nav-link fw-medium hover-nav" href="/surah.html" style="font-size: 14px;">Surah</a>
+            <a class="nav-item nav-link fw-medium hover-nav" href="/jadwal-sholat.html" style="font-size: 14px;">Jadwal
+              Sholat</a>
+            <a class="nav-item nav-link fw-medium hover-nav" href="/kontak-kami.html" style="font-size: 14px;">Kontak
+              Kami</a>
+          </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </header>
 
-  <section class="my-5">
-    <div class="container">
-      <div x-data="detailSurah()" x-init="connect()">
-        <template x-if="loading">
-          <div class="loading-spinner">
-            <h2 class="text-center mb-3">Loading Content</h2>
-            <div class="space-x justify-content-center">
-              <div class="spinner-grow text-dark" role="status"></div>
-              <div class="spinner-grow text-dark" role="status"></div>
-              <div class="spinner-grow text-dark" role="status"></div>
-              <div class="spinner-grow text-dark" role="status"></div>
-              <div class="spinner-grow text-dark" role="status"></div>
-              <div class="spinner-grow text-dark" role="status"></div>
-            </div>
-          </div>
-        </template>
-        <template x-if="!loading">
-          <div class="row">
-            <div class="col-12">
-              <div class="text-center">
-                <h1 class="text-black mb-3" x-text="`Surah ${surah.name}`" style="font-size: 40px;"></h1>
-                <div class="h1 text-black" x-text="`(${surah.translation})`" style="font-size: 40px;"></div>
-                <div class="mt-4 text-islamic" x-text="`${surah.revelation} - (${surah.numberOfAyahs}) Ayat`"
-                  style="font-size: 16px;"></div>
+    <section class="my-5">
+      <div class="container">
+        <div x-data="detailSurah()" x-init="connect()">
+          <template x-if="loading">
+            <div class="loading-spinner">
+              <h2 class="text-center mb-3">Loading Content</h2>
+              <div class="space-x justify-content-center">
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
+                <div class="spinner-grow text-dark" role="status"></div>
               </div>
-              <div class="my-5">
-
-                <div x-show="surah.name != 'Al-Fatihah'" class="my-5">
-                  <div class="mb-3 card py-3 rounded-4 shadow-sm"
-                    :class="isPlaying(`bismillah`) ? 'bg-surah' : ''">
-                    <div class="card-body">
-                      <h2 class="float-end text-dark" x-text="surah.bismillah.arab" style="font-size: 26px;"></h2>
-                    </div>
-                  </div>
-                  <div class="d-block d-md-flex justify-content-between align-items-center">
-                    <div class="text-black mb-3 mb-md-0 fw-medium">
-                      <span>Artinya: </span>
-                      <span class="fst-italic" x-text="surah.bismillah.translation"></span>
-                    </div>
-                    <div class="audio ms-4">
-                      <button id="bismillah" class="btn shadow-sm rounded-3"
-                        @click="playAyahs(surah.bismillah.audio.alafasy, `bismillah`)"
-                        x-text="isPlaying(`bismillah`) ? 'Hentikan' : 'Dengarkan'"
-                        :class="isPlaying(`bismillah`) ? 'text-listening-surah' : ''"></button>
-                    </div>
-
-                  </div>
+            </div>
+          </template>
+          <template x-if="!loading">
+            <div class="row">
+              <div class="col-12">
+                <div class="text-center">
+                  <h1 class="text-black mb-3" x-text="`Surah ${surah.name}`" style="font-size: 40px;"></h1>
+                  <div class="h1 text-black" x-text="`(${surah.translation})`" style="font-size: 40px;"></div>
+                  <div class="mt-4 text-islamic" x-text="`${surah.revelation} - (${surah.numberOfAyahs}) Ayat`"
+                    style="font-size: 16px;"></div>
                 </div>
+                <div class="my-5">
 
-
-
-                <template x-for="ayahs in surah.ayahs" :key="ayahs.number.inSurah">
-                  <div class="my-5">
-                    <div class="mb-3 card py-3 rounded-4 shadow-sm"
-                      :class="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'bg-surah' : ''">
+                  <div x-show="surah.name != 'Al-Fatihah'" class="my-5">
+                    <div class="mb-3 card py-3 rounded-4 shadow-sm" :class="isPlaying(`bismillah`) ? 'bg-surah' : ''">
                       <div class="card-body">
-                        <div class="d-flex align-items-center float-end">
-                          <div class="circle-border me-3">
-                            <span class="h2" x-text="changeToArabic(ayahs.number.inSurah)"></span>
-                          </div>
-                          <h2 class="float-end text-dark" x-text="ayahs.arab" style="font-size: 26px;"></h2>
-                        </div>
-                        
+                        <h2 class="float-end text-dark" x-text="surah.bismillah.arab" style="font-size: 26px;"></h2>
                       </div>
                     </div>
                     <div class="d-block d-md-flex justify-content-between align-items-center">
                       <div class="text-black mb-3 mb-md-0 fw-medium">
                         <span>Artinya: </span>
-                        <span class="fst-italic" x-text="ayahs.translation"></span>
+                        <span class="fst-italic" x-text="surah.bismillah.translation"></span>
                       </div>
                       <div class="audio ms-4">
-                        <button :id="`ayah_${ayahs.number.inSurah}`" class="btn shadow-sm rounded-3"
-                          @click="playAyahs(ayahs.audio.alafasy, `ayah_${ayahs.number.inSurah}`)"
-                          x-text="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'Hentikan' : 'Dengarkan'"
-                          :class="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'text-listening-surah' : ''"></button>
+                        <button id="bismillah" class="btn shadow-sm rounded-3"
+                          @click="playAyahs(surah.bismillah.audio.alafasy, `bismillah`)"
+                          x-text="isPlaying(`bismillah`) ? 'Hentikan' : 'Dengarkan'"
+                          :class="isPlaying(`bismillah`) ? 'text-listening-surah' : ''"></button>
                       </div>
-  
+
                     </div>
                   </div>
-                  
-                  
-                </template>
+
+
+
+                  <template x-for="ayahs in surah.ayahs" :key="ayahs.number.inSurah">
+                    <div class="my-5">
+                      <div class="mb-3 card py-3 rounded-4 shadow-sm"
+                        :class="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'bg-surah' : ''">
+                        <div class="card-body">
+                          <div class="d-flex align-items-center float-end">
+                            <div class="circle-border me-3">
+                              <span class="h2" x-text="changeToArabic(ayahs.number.inSurah)"></span>
+                            </div>
+                            <h2 class="float-end text-dark" x-text="ayahs.arab" style="font-size: 26px;"></h2>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="d-block d-md-flex justify-content-between align-items-center">
+                        <div class="text-black mb-3 mb-md-0 fw-medium">
+                          <span>Artinya: </span>
+                          <span class="fst-italic" x-text="ayahs.translation"></span>
+                        </div>
+                        <div class="audio ms-4">
+                          <button :id="`ayah_${ayahs.number.inSurah}`" class="btn shadow-sm rounded-3"
+                            @click="playAyahs(ayahs.audio.alafasy, `ayah_${ayahs.number.inSurah}`)"
+                            x-text="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'Hentikan' : 'Dengarkan'"
+                            :class="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'text-listening-surah' : ''"></button>
+                        </div>
+
+                      </div>
+                    </div>
+
+
+                  </template>
+                </div>
+
               </div>
-
             </div>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <footer class="pt-5 my-4 bg-white footer-border-secondary">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-3 mb-3">
+            <a href="/">
+              <img src="./assets/images/logo.png" class="h-10" alt="...">
+            </a>
+            <ul class="list-unstyled d-flex mt-3">
+              <li class="sosmed-icons me-2">
+                <a href="#" class="text-decoration-none text-white">
+                  <i class="bi bi-facebook"></i>
+                </a>
+              </li>
+              <li class="sosmed-icons me-2">
+                <a href="#" class="text-decoration-none text-white">
+                  <i class="bi bi-instagram"></i>
+                </a>
+              </li>
+              <li class="sosmed-icons me-2">
+                <a href="#" class="text-decoration-none text-white">
+                  <i class="bi bi-twitter"></i>
+                </a>
+              </li>
+
+            </ul>
           </div>
-        </template>
-      </div>
-    </div>
-  </section>
-
-  <footer class="pt-5 my-4 bg-white footer-border-secondary">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 col-md-3 mb-3">
-          <a href="/">
-            <img src="./assets/images/logo.png" class="h-10" alt="...">
-          </a>
-          <ul class="list-unstyled d-flex mt-3">
-            <li class="sosmed-icons me-2">
-              <a href="#" class="text-decoration-none text-white">
-                <i class="bi bi-facebook"></i>
-              </a>
-            </li>
-            <li class="sosmed-icons me-2">
-              <a href="#" class="text-decoration-none text-white">
-                <i class="bi bi-instagram"></i>
-              </a>
-            </li>
-            <li class="sosmed-icons me-2">
-              <a href="#" class="text-decoration-none text-white">
-                <i class="bi bi-twitter"></i>
-              </a>
-            </li>
-
-          </ul>
-        </div>
-        <div class="col-12 col-md-3 mb-3">
-          <h3 class="mb-2 text-islamic">Kontak Kami</h3>
-          <p class="mb-0">Jl.Ketintang No. 156, Surabaya</p>
-          <p class="mb-0">(+62) 811-3221-2000</p>
-          <p class="mb-0">islamicweb@mail.com</p>
-        </div>
-        <div class="col-12 col-md-3 mb-3">
-          <h3 class="mb-2 text-islamic">Tautan Penting</h3>
-          <ul class="list-unstyled footer-link">
-            <li class="mb-2">
-              <a href="/tentang-kami.html" class="text-decoration-none text-dark">Tentang Kami</a>
-            </li>
-            <li class="mb-2">
-              <a href="/surah.html" class="text-decoration-none text-dark">Surah</a>
-            </li>
-            <li class="mb-2">
-              <a href="/jadwal-sholat.html" class="text-decoration-none text-dark">Jadwal Sholat</a>
-            </li>
-            <li class="mb-2">
-              <a href="/kontak-kami.html" class="text-decoration-none text-dark">Kontak Kami</a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-12 col-md-3 mb-3">
-          <h3 class="mb-2 text-islamic">Afiliasi</h3>
-          <ul class="list-unstyled footer-link">
-            <li class="mb-2">
-              <a href="#" class="text-decoration-none text-dark">Telkom Indonesia</a>
-            </li>
-            <li class="mb-2">
-              <a href="#" class="text-decoration-none text-dark">Yayasan Pendidikan Telkom</a>
-            </li>
-            <li class="mb-2">
-              <a href="#" class="text-decoration-none text-dark">Universitas Telkom</a>
-            </li>
-            <li class="mb-2">
-              <a href="#" class="text-decoration-none text-dark">Universitas Telkom Jakarta</a>
-            </li>
-            <li class="mb-2">
-              <a href="#" class="text-decoration-none text-dark">Institut Teknologi Telkom Purwokerto</a>
-            </li>
-          </ul>
+          <div class="col-12 col-md-3 mb-3">
+            <h3 class="mb-2 text-islamic">Kontak Kami</h3>
+            <p class="mb-0">Jl.Ketintang No. 156, Surabaya</p>
+            <p class="mb-0">(+62) 811-3221-2000</p>
+            <p class="mb-0">islamicweb@mail.com</p>
+          </div>
+          <div class="col-12 col-md-3 mb-3">
+            <h3 class="mb-2 text-islamic">Tautan Penting</h3>
+            <ul class="list-unstyled footer-link">
+              <li class="mb-2">
+                <a href="/tentang-kami.html" class="text-decoration-none text-dark">Tentang Kami</a>
+              </li>
+              <li class="mb-2">
+                <a href="/surah.html" class="text-decoration-none text-dark">Surah</a>
+              </li>
+              <li class="mb-2">
+                <a href="/jadwal-sholat.html" class="text-decoration-none text-dark">Jadwal Sholat</a>
+              </li>
+              <li class="mb-2">
+                <a href="/kontak-kami.html" class="text-decoration-none text-dark">Kontak Kami</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-3 mb-3">
+            <h3 class="mb-2 text-islamic">Afiliasi</h3>
+            <ul class="list-unstyled footer-link">
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark">Telkom Indonesia</a>
+              </li>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark">Yayasan Pendidikan Telkom</a>
+              </li>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark">Universitas Telkom</a>
+              </li>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark">Universitas Telkom Jakarta</a>
+              </li>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-dark">Institut Teknologi Telkom Purwokerto</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="bg-islamic py-3">
-      <p class="text-center mb-0 text-white">© 2024 Quran Pemweb</p>
-    </div>
+      <div class="bg-islamic py-3">
+        <p class="text-center mb-0 text-white">© 2024 Quran Pemweb</p>
+      </div>
 
-  </footer>
+    </footer>
+
+    <button type="button" class="btn btn-islamic btn-floating btn-lg" id="btn-back-to-top">
+      <i class="bi bi-arrow-up text-white"></i>
+    </button>
+  </main>
+
 
   <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="./assets/script.js"></script>
   <script>
     const url_string = window.location.href;
     console.log(url_string);
@@ -282,11 +289,7 @@
         },
       };
     }
-
-
-
   </script>
-  <script src="./assets/script.js"></script>
 </body>
 
 </html>
