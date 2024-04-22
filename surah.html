@@ -4,93 +4,200 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bootstrap demo</title>
+  <title>Surah | Islamic Web Telkom Surabay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./assets/style.css">
+  <style>
+    .img-surah {
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    .heading-surah-text {
+      font-size: 40px;
+      font-weight: 600;
+    }
+  </style>
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-0 py-3 shadow">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg px-0 py-3 shadow bg-white">
     <div class="container-xl">
       <!-- Logo -->
       <a class="navbar-brand" href="/">
-        <img src="https://preview.webpixels.io/web/img/logos/clever-light.svg" class="h-4" alt="...">
+        <img src="./assets/images/logo.png" class="h-5" alt="...">
       </a>
       <!-- Navbar toggle -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <!-- Collapse -->
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto">
-          <a class="nav-item nav-link fw-bold" href="/" style="font-size: 16px;">Home</a>
-          <a class="nav-item nav-link fw-bold active" href="/surah.html" style="font-size: 16px;">Surah</a>
-          <a class="nav-item nav-link fw-bold" href="/random-ayat.html" style="font-size: 16px;">Random Ayat</a>
-          <a class="nav-item nav-link fw-bold" href="/jadwal-sholat.html" style="font-size: 16px;">Jadwal Sholat</a>
+          <a class="nav-item nav-link fw-medium hover-nav" href="/" style="font-size: 14px;">Home</a>
+          <a class="nav-item nav-link fw-medium hover-nav" href="/tentang-kami.html" style="font-size: 14px;">Tentang
+            Kami</a>
+          <a class="nav-item nav-link fw-medium hover-nav active-navbar" href="/surah.html"
+            style="font-size: 14px;">Surah</a>
+          <a class="nav-item nav-link fw-medium hover-nav" href="/jadwal-sholat.html" style="font-size: 14px;">Jadwal
+            Sholat</a>
+          <a class="nav-item nav-link fw-medium hover-nav" href="/kontak-kami.html" style="font-size: 14px;">Kontak
+            Kami</a>
         </div>
       </div>
     </div>
   </nav>
+  <!-- End Navbar -->
 
   <section class="my-5">
     <div class="container">
       <div x-data="allSurah()" x-init="connect()">
-        <div class="row">
-          <div class="col-12">
-            <h1 class="text-center mb-4">Surah</h1>
+        <div class="text-center my-5">
+          <img class="img-surah" src="./assets/images/surah.png" alt="">
+          <p class="text-islamic fw-semibold my-3" style="font-size: 20px;">Surah Al-Quran</p>
+          <div class="heading-surah">
+            <h2 class="heading-surah-text">Bacalah <span class="text-islamic">Al-Quran</span></h2>
+            <h2 class="heading-surah-text">Dengan <span class="text-islamic">Tartil</span></h2>
           </div>
-          <template x-if="loading">
-            <div class="loading-spinner">
-              <h2 class="text-center mb-3">Loading Content</h2>
-              <div class="space-x justify-content-center">
-                <div class="spinner-grow text-dark" role="status"></div>
-                <div class="spinner-grow text-dark" role="status"></div>
-                <div class="spinner-grow text-dark" role="status"></div>
-                <div class="spinner-grow text-dark" role="status"></div>
-                <div class="spinner-grow text-dark" role="status"></div>
-                <div class="spinner-grow text-dark" role="status"></div>
-              </div>
-            </div>
-          </template>
-          <template x-if="!loading">
-            <div class="row row-deck">
-              <template x-for="item in surah" :key="item.number">
-                <div class="col-12 col-md-4 mb-3">
-                  <a :href="`/detail-surah.html?surah=${item.number}`" class="card">
-                    <div class="card-body" >
-                      <h3 class="card-title mb-0" x-text="`${item.number}. Surah ${item.name} (${item.translation})`"></h3>
-                      <span class="text-secondary" x-text="item.revelation"></span>
-                      <span class="text-secondary"> - </span>
-                      <span class="text-secondary" x-text="`(${item.numberOfAyahs}) Ayat`"></span>
-                    </div>
-                  </a>
-                </div>
-              </template>
-            </div>
-          </template>
+          <div class="input-icon my-4 shadow rounded-3 d-block mx-auto" style="max-width: 400px;">
+            <span class="input-icon-addon">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" value="" class="form-control" placeholder="cari Surah" x-model="search" />
           </div>
         </div>
+        <template x-if="loading">
+          <div class="loading-spinner">
+            <h2 class="text-center mb-3">Loading Content</h2>
+            <div class="space-x justify-content-center">
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+              <div class="spinner-grow text-dark" role="status"></div>
+            </div>
+          </div>
+        </template>
+        <template x-if="!loading">    
+          <div class="row row-deck">
+            <template x-for="item in filteredSurah" :key="item.number">
+              <div class="col-12 col-md-4 mb-3">
+                <a :href="`/detail-surah.html?surah=${item.number}`"
+                  class="card shadow-sm rounded-3 py-3 border-1 border-wide">
+                  <div class="card-body">
+                    <h3 class="card-title mb-1 fw-semibold text-islamic"
+                      x-text="`${item.number}. Surah ${item.name} (${item.translation})`">
+                    </h3>
+                    <span class="text-dark" x-text="item.revelation"></span>
+                    <span class="text-dark"> - </span>
+                    <span class="text-dark" x-text="`(${item.numberOfAyahs}) Ayat`"></span>
+                  </div>
+                </a>
+              </div>
+            </template>
+          </div>
+        </template>
       </div>
     </div>
   </section>
 
-  <footer class="py-3 my-4 bg-dark">
-    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-      <li class="nav-item"><a href="/" class="nav-link px-2 text-white">Home</a></li>
-      <li class="nav-item"><a href="/surah.html" class="nav-link px-2 text-white">Surah</a></li>
-      <li class="nav-item"><a href="/random-ayat.html" class="nav-link px-2 text-white">Random Ayat</a></li>
-    </ul>
-    <p class="text-center text-white">© 2024 Quran Pemweb</p>
+  <footer class="pt-5 my-4 bg-white footer-border-secondary">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-3 mb-3">
+          <a href="/">
+            <img src="./assets/images/logo.png" class="h-10" alt="...">
+          </a>
+          <ul class="list-unstyled d-flex mt-3">
+            <li class="sosmed-icons me-2">
+              <a href="#" class="text-decoration-none text-white">
+                <i class="bi bi-facebook"></i>
+              </a>
+            </li>
+            <li class="sosmed-icons me-2">
+              <a href="#" class="text-decoration-none text-white">
+                <i class="bi bi-instagram"></i>
+              </a>
+            </li>
+            <li class="sosmed-icons me-2">
+              <a href="#" class="text-decoration-none text-white">
+                <i class="bi bi-twitter"></i>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+        <div class="col-12 col-md-3 mb-3">
+          <h3 class="mb-2 text-islamic">Kontak Kami</h3>
+          <p class="mb-0">Jl.Ketintang No. 156, Surabaya</p>
+          <p class="mb-0">(+62) 811-3221-2000</p>
+          <p class="mb-0">islamicweb@mail.com</p>
+        </div>
+        <div class="col-12 col-md-3 mb-3">
+          <h3 class="mb-2 text-islamic">Tautan Penting</h3>
+          <ul class="list-unstyled footer-link">
+            <li class="mb-2">
+              <a href="/tentang-kami.html" class="text-decoration-none text-dark">Tentang Kami</a>
+            </li>
+            <li class="mb-2">
+              <a href="/surah.html" class="text-decoration-none text-dark">Surah</a>
+            </li>
+            <li class="mb-2">
+              <a href="/jadwal-sholat.html" class="text-decoration-none text-dark">Jadwal Sholat</a>
+            </li>
+            <li class="mb-2">
+              <a href="/kontak-kami.html" class="text-decoration-none text-dark">Kontak Kami</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-12 col-md-3 mb-3">
+          <h3 class="mb-2 text-islamic">Afiliasi</h3>
+          <ul class="list-unstyled footer-link">
+            <li class="mb-2">
+              <a href="#" class="text-decoration-none text-dark">Telkom Indonesia</a>
+            </li>
+            <li class="mb-2">
+              <a href="#" class="text-decoration-none text-dark">Yayasan Pendidikan Telkom</a>
+            </li>
+            <li class="mb-2">
+              <a href="#" class="text-decoration-none text-dark">Universitas Telkom</a>
+            </li>
+            <li class="mb-2">
+              <a href="#" class="text-decoration-none text-dark">Universitas Telkom Jakarta</a>
+            </li>
+            <li class="mb-2">
+              <a href="#" class="text-decoration-none text-dark">Institut Teknologi Telkom Purwokerto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="bg-islamic py-3">
+      <p class="text-center mb-0 text-white">© 2024 Quran Pemweb</p>
+    </div>
+
   </footer>
 
-  
+
   <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script>
     // get api from https://quran-api-id.vercel.app/surahs/
     function allSurah() {
       return {
         surah: [],
         loading: true,
+        search: '',
         connect() {
           fetch(`https://quran-api-id.vercel.app/surahs/`)
             .then(response => response.json())
@@ -103,6 +210,14 @@
               console.error('Error fetching data:', error);
               this.loading = false;
             });
+        },
+        get filteredSurah() {
+          if (this.search === '') {
+            return this.surah;
+          }
+          return this.surah.filter((item) => {
+            return item.name.toLowerCase().includes(this.search.toLowerCase()) || item.translation.toLowerCase().includes(this.search.toLowerCase());
+          });
         }
       }
     }

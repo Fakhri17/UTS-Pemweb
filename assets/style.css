@@ -6,12 +6,21 @@ html{
   font-family: 'Poppins', sans-serif;
 }
 
+body{
+  background-color: #fff;
+}
+
 .bg-islamic{
   background-color: #00602E !important;
 }
 
 .text-islamic{
   color: #00602E !important;
+}
+
+.footer-border-secondary{
+  border-top: 1px solid #dddcdc !important;
+
 }
 
 .sosmed-icons {
