@@ -1,3 +1,33 @@
+html{
+  scroll-behavior: smooth;
+}
+
+*{
+  font-family: 'Poppins', sans-serif;
+}
+
+.bg-islamic{
+  background-color: #00602E !important;
+}
+
+.text-islamic{
+  color: #00602E !important;
+}
+
+.sosmed-icons {
+  width: 2rem; /* Adjust as needed */
+  height: 2rem; /* Adjust as needed */
+  font-size: 1rem;
+  background-color: #00602E;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
 .circle-border {
   width: 38px; /* adjust the width and height as needed */
   height: 38px;
@@ -8,4 +38,19 @@
   justify-content: center;
   align-items: center;
   
+}
+
+.active-navbar{
+  color: #00602E !important;
+  font-weight: 600 !important;
+}
+
+.hover-nav:hover{
+  color: #00602E !important;
+  font-weight: 600 !important;
+}
+
+.footer-link li a:hover{
+  color: #00602E !important;
+  font-weight: 400 !important;
 }
