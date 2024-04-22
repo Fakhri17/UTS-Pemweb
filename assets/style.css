@@ -1,41 +1,40 @@
-html{
+html {
   scroll-behavior: smooth;
 }
 
-*{
-  font-family: 'Poppins', sans-serif;
+* {
+  font-family: "Poppins", sans-serif;
 }
 
-body{
+body {
   background-color: #fff;
+  min-height: 75rem;
+  padding-top: 7rem;
 }
 
-.bg-islamic{
-  background-color: #00602E !important;
+.bg-islamic {
+  background-color: #00602e !important;
 }
 
-.text-islamic{
-  color: #00602E !important;
+.text-islamic {
+  color: #00602e !important;
 }
 
-.footer-border-secondary{
+.footer-border-secondary {
   border-top: 1px solid #dddcdc !important;
-
 }
 
 .sosmed-icons {
   width: 2rem; /* Adjust as needed */
   height: 2rem; /* Adjust as needed */
   font-size: 1rem;
-  background-color: #00602E;
+  background-color: #00602e;
   color: white;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-
 
 .circle-border {
   width: 38px; /* adjust the width and height as needed */
@@ -46,20 +45,29 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 
-.active-navbar{
-  color: #00602E !important;
+.active-navbar {
+  color: #00602e !important;
   font-weight: 600 !important;
 }
 
-.hover-nav:hover{
-  color: #00602E !important;
+.hover-nav:hover {
+  color: #00602e !important;
   font-weight: 600 !important;
 }
 
-.footer-link li a:hover{
-  color: #00602E !important;
+.footer-link li a:hover {
+  color: #00602e !important;
   font-weight: 400 !important;
 }
+
+.card-surah:hover {
+  background-color: #00602E; /* Background color on hover */
+}
+
+.card-surah:hover .card-title,
+.card-surah:hover .text-dark {
+  color: #fff !important; /* Text color on hover */
+}
+
