@@ -1,88 +1,3 @@
-/**
- * Get videos on load
- */
-(function () {
-    getVideos();
-})();
-
-/**
- * For each video player, create custom thumbnail or
- * use Youtube max resolution default thumbnail and create
- * iframe video.
- */
-function getVideos() {
-    var v = document.getElementsByClassName("youtube-player");
-    for (var n = 0; n < v.length; n++) {
-        var p = document.createElement("div");
-        var id = v[n].getAttribute("data-id");
-
-        var placeholder = v[n].hasAttribute("data-thumbnail")
-            ? v[n].getAttribute("data-thumbnail")
-            : "";
-
-        if (placeholder.length) p.innerHTML = createCustomThumbail(placeholder);
-        else p.innerHTML = createThumbail(id);
-
-        v[n].appendChild(p);
-        p.addEventListener("click", function () {
-            var parent = this.parentNode;
-            createIframe(parent, parent.getAttribute("data-id"));
-        });
-    }
-}
-
-/**
- * Create custom thumbnail from data-attribute provided url
- * @param {string} url
- * @return {string} The HTML containing the <img> tag
- */
-function createCustomThumbail(url) {
-    return (
-        '<img class="youtube-thumbnail" src="' +
-        url +
-        '" alt="Youtube Preview" /><div class="youtube-play-btn"></div>'
-    );
-}
-
-/**
- * Get Youtube default max resolution thumbnail
- * @param {string} id The Youtube video id
- * @return {string} The HTML containing the <img> tag
- */
-function createThumbail(id) {
-    return (
-        '<img class="youtube-thumbnail" src="//i.ytimg.com/vi_webp/' +
-        id +
-        '/maxresdefault.webp" alt="Youtube Preview"><div class="youtube-play-btn"></div>'
-    );
-}
-
-/**
- * Create and load iframe in Youtube container
- **/
-function createIframe(v, id) {
-    var iframe = document.createElement("iframe");
-    console.log(v);
-    iframe.setAttribute(
-        "src",
-        "//www.youtube.com/embed/" +
-            id +
-            "?autoplay=1&color=white&autohide=2&modestbranding=1&border=0&wmode=opaque&enablejsapi=1&showinfo=0&rel=0"
-    );
-    iframe.setAttribute("frameborder", "0");
-    iframe.setAttribute("class", "youtube-iframe");
-    v.firstChild.replaceWith(iframe);
-}
-
-/** Pause video on modal close **/
-$("#video-modal").on("hidden.bs.modal", function (e) {
-    $(this).find("iframe").remove();
-});
-
-/** Pause video on modal close **/
-$("#video-modal").on("show.bs.modal", function (e) {
-    getVideos();
-});
 String.prototype.EntoAr = function () {
   return this.replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]);
 };
@@ -97,16 +12,12 @@ window.onscroll = function () {
 };
 
 function scrollFunction() {
-  if (
-    document.body.scrollTop > 20 ||
-    document.documentElement.scrollTop > 20
-  ) {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
     mybutton.style.display = "block";
   } else {
     mybutton.style.display = "none";
   }
 }
-
 
 mybutton.addEventListener("click", backToTop);
 
@@ -114,3 +25,37 @@ function backToTop() {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
 }
+
+(function () {
+  var youtube = document.querySelectorAll(".youtube");
+
+  for (var i = 0; i < youtube.length; i++) {
+    var source =
+      "https://images.unsplash.com/photo-1654429991781-ffb69148e4f5?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
+    var image = new Image();
+    image.src = source;
+    image.addEventListener(
+      "load",
+      (function () {
+        youtube[i].appendChild(image);
+      })(i)
+    );
+
+    youtube[i].addEventListener("click", function () {
+      var iframe = document.createElement("iframe");
+
+      iframe.setAttribute("frameborder", "0");
+      iframe.setAttribute("allowfullscreen", "");
+      iframe.setAttribute(
+        "src",
+        "https://www.youtube.com/embed/" +
+          this.dataset.embed +
+          "?rel=0&showinfo=0&autoplay=1"
+      );
+
+      this.innerHTML = "";
+      this.appendChild(iframe);
+    });
+  }
+})();
