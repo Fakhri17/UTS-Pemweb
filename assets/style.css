@@ -1,0 +1,207 @@
+html{
+  scroll-behavior: smooth;
+}
+
+*{
+  font-family: 'Poppins', sans-serif;
+}
+
+body{
+  background-color: #fff;
+  min-height: 100vh;
+  padding-top: 7rem;
+}
+
+.bg-islamic{
+  background-color: #00602E !important;
+}
+
+.text-islamic{
+  color: #00602E !important;
+}
+
+.btn-islamic {
+  background-color: #00602e !important;
+  border-color: #00602e !important;
+}
+
+.footer-border-secondary{
+  border-top: 1px solid #dddcdc !important;
+
+}
+
+.sosmed-icons {
+  width: 2rem; /* Adjust as needed */
+  height: 2rem; /* Adjust as needed */
+  font-size: 1rem;
+  background-color: #00602E;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-border {
+  width: 38px; /* adjust the width and height as needed */
+  height: 38px;
+  border-radius: 50%; /* this creates the circular shape */
+  border: 2px solid black; /* adjust the border thickness and color as needed */
+  /* center vertical horizontal text */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.active-navbar{
+  color: #00602E !important;
+  font-weight: 600 !important;
+}
+
+.hover-nav:hover{
+  color: #00602E !important;
+  font-weight: 600 !important;
+}
+
+.footer-link li a:hover{
+  color: #00602E !important;
+  font-weight: 400 !important;
+}
+
+.hero-container{
+  display: flex;
+  justify-content: center;
+}
+
+.hero-text{
+  align-content: center;
+}
+
+.hero-text-heading{
+  line-height: 46px;
+}
+
+.showcase-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.showcase-text{
+  text-align: right;
+  max-width: 33%;
+}
+
+.showcase-text-heading{
+  font-size: 42px;
+  line-height: 46px;
+}
+
+.youtube-player {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  width: 600px;
+  height: 340px;
+  cursor: hand;
+  cursor: pointer;
+  display: block;
+}
+
+img.youtube-thumbnail {
+  bottom: 0;
+  display: block;
+  left: 0;
+  margin: auto;
+  max-width: 100%;
+  width: 600px;
+  height: 340px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: auto;
+}
+
+div.youtube-play-btn {
+  height: 72px;
+  width: 72px;
+  left: 50%;
+  top: 50%;
+  margin-left: -36px;
+  margin-top: -36px;
+  position: absolute;
+  background: url("https://www.friidesigns.com/wp-content/uploads/2018/11/white-play-icon-png-6.png") no-repeat center center;
+  background-size: 72px 72px;
+}
+
+.youtube-iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.blog-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.blog-text{
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.blog-text-heading{
+  line-height: 46px;
+}
+
+.blog-items{
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.blog-items-box{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #ffffff;
+  height: 250px;
+  width: 350px;
+  margin: 0 auto;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #E0E0E0;
+}
+
+.slideshow{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swiper-slide{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  background: white;
+  height: 200px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #E0E0E0;
+}
+
+.slideshow-container-arab{
+  max-width: 35%;
+}
+
+
+
+
+
