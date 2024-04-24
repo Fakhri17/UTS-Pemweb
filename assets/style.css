@@ -1,0 +1,138 @@
+.circle-border {
+  width: 38px; /* adjust the width and height as needed */
+  height: 38px;
+  border-radius: 50%; /* this creates the circular shape */
+  border: 2px solid black; /* adjust the border thickness and color as needed */
+  /* center vertical horizontal text */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+/* untuk gmaps */
+iframe {
+  height: 400px;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 20px; /* Memberi sedikit jarak dari atas */
+  display: flex;
+  justify-content: center; /* Menengahkan secara horizontal */
+  align-items: center; /* Menengahkan secara vertikal */
+  border-radius: 50px;
+}
+
+/* Stil untuk menengahkan judul */
+h1, h2 {
+  text-align: center;
+}
+
+/* Stil untuk menengahkan teks tambahan */
+p {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Stil untuk menengahkan formulir dan efek blur */
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 25px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+.form-container label {
+  display: inline-block;
+  width: 100px;
+  text-align: right;
+  margin-right: 10px;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container textarea {
+  display: inline-block;
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-container input[type="submit"] {
+  align-items: center;
+  text-align: center;
+  display: flex;
+  width: 100px;
+  margin-top: 20px;
+  padding: 8px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  grid-column: 1 / 2;
+  justify-self: start;
+}
+
+.form-container input[type="submit"]:hover{
+  background-color: #00602e;
+}
+
+/* Stil untuk memperindah formulir */
+label, textarea {
+  display: flex;
+  margin-bottom: 10px;
+  width: 100%;
+  border-radius: 25px;
+
+}
+
+.form-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.form-container .grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 10px;
+}
+
+.form-container .grid-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form-container .grid-container input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 25px;
+}
+
+.form-container .grid-container textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 25px;
+}
+
+.form-container .grid-container #nama {
+  grid-column: 2 / 3;
+  justify-self: start;
+}
+
+/* Menempatkan input email di sebelah kiri */
+.form-container .grid-container #email {
+  grid-column: 2 / 3;
+  justify-self: start;
+}
+
+.highlight {
+  color: green;
+}

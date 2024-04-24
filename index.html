@@ -6,10 +6,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bootstrap demo</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body>
-  <h1>Hello, world!</h1>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-0 py-3 shadow">
+    <div class="container-xl">
+      <!-- Logo -->
+      <a class="navbar-brand" href="/">
+        <img src="https://preview.webpixels.io/web/img/logos/clever-light.svg" class="h-4" alt="...">
+      </a>
+      <!-- Navbar toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-item nav-link fw-bold" href="/" style="font-size: 16px;">Home</a>
+          <a class="nav-item nav-link fw-bold" href="/surah.html" style="font-size: 16px;">Surah</a>
+          <a class="nav-item nav-link fw-bold" href="/random-ayat.html" style="font-size: 16px;">Random Ayat</a>
+          <a class="nav-item nav-link fw-bold" href="/jadwal-sholat.html" style="font-size: 16px;">Jadwal Sholat</a>
+          <a class="nav-item nav-link fw-bold" href="/tentang-kami.html" style="font-size: 16px;">Tentang Kami</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <body style="background-image: url('background.jpg'); background-size: cover;">
+
+    <h1>Hubungi <span class="highlight">Kami</span></h1>
+    <p>Islamic Web situs dakwah islam yang berpijak di atas pijakan Ahlussunnah wal jama'ah dalam akidah dan amal</p>
+    
+    <!-- Kontainer untuk peta -->
+    <div id="map"></div>
+    
+    <!-- Form untuk masukan pengguna -->
+    <div class="form-container">
+        <h2>Saran dan <span class="highlight">Masukan</span></h2>
+        <p>Saran dan Masukan dari kalian dapat membantu kami untuk membuat website ini menjadi lebih baik.</p>
+        <form action="/submit" method="post">
+            <div class="grid-container">
+                <label for="nama">Nama Lengkap:</label>
+                <input type="text" placeholder="Masukan Nama Lengkap... " id="nama" name="nama" required>
+                <label for="email">Email:</label>
+                <input type="email" placeholder="Masukan Email..." id="email" name="email" required>
+            </div>
+            <label for="saran">Saran/Masukan:</label>
+            <textarea placeholder="Ketik saran dan masukan.." id="saran" name="saran" rows="4" required></textarea>
+            
+            <input type="submit" value="Kirim">
+        </form>
+    </div>
+
+    <script src="script.js"></script> <!-- Mengimpor file JavaScript -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+</body>
+  <!-- End Navbar -->
+
+  <section class="py-5 my-5">
+    <div class="container">
+      <h1 class="text-center">Content Is Here</h1>
+    </div>
+  </section>
+
+  <footer class="py-3 my-4 bg-dark">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="/" class="nav-link px-2 text-white">Home</a></li>
+      <li class="nav-item"><a href="/surah.html" class="nav-link px-2 text-white">Surah</a></li>
+      <li class="nav-item"><a href="/random-ayat.html" class="nav-link px-2 text-white">Random Ayat</a></li>
+    </ul>
+    <p class="text-center text-white">© 2024 Quran Pemweb</p>
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
 </body>
 
