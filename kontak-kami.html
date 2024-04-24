@@ -49,10 +49,15 @@
     }
 
     .btn-islamic {
-      background-color: #2d3e50;
+      background-color: #00602E;
       color: #fff;
       font-weight: 600;
       font-size: 16px;
+    }
+
+    .btn-islamic:hover {
+      background-color: #004d24 !important;
+      color: #fff !important;
     }
   </style>
 </head>
@@ -98,19 +103,22 @@
           <div class="row">
             <div class="col-md-6 mb-3">
               <label class="form-label">Nama Lengkap</label>
-              <input type="text" class="form-control rounded-3 shadow-lg bg-white border-wide" name="nama"
-                placeholder="Masukkan Lengkap" style="height: 50px;" />
+              <input id="nama-lengkap" type="text" class="form-control rounded-3 shadow-lg bg-white border-wide"
+                name="nama" placeholder="Masukkan Lengkap" style="height: 50px;" />
+              <p id="error-nama" class="text-danger mt-2 fw-bold"></p>
             </div>
             <div class="col-md-6 mb-3">
               <label class="form-label">Nama Lengkap</label>
-              <input type="email" class="form-control rounded-3 shadow-lg bg-white border-wide" name="email"
-                placeholder="Masukkan Email" style="height: 50px;" />
+              <input id="email-form" type="email" class="form-control rounded-3 shadow-lg bg-white border-wide"
+                name="email" placeholder="Masukkan Email" style="height: 50px;" />
+              <p id="error-email" class="text-danger mt-2 fw-bold"></p>
             </div>
           </div>
           <div class="mt-3 mb-4">
             <label class="form-label">Saran dan Masukan</label>
-            <textarea class="form-control shadow-lg bg-white border-wide" name="saran" placeholder="Saran dan Masukan"
-              rows="8"></textarea>
+            <textarea id="saran-masukan" class="form-control shadow-lg bg-white border-wide" name="saran"
+              placeholder="Saran dan Masukan" rows="8"></textarea>
+            <p id="error-saran" class="text-danger mt-2 fw-bold"></p>
           </div>
           <button type="submit" class="btn btn-pill btn-islamic">Kirim Pesan</button>
         </form>
@@ -119,25 +127,34 @@
 
     <section class="section-content">
       <div class="container">
-        <div class="text-center d-block mx-auto" style="max-width: 500px;">
+        <div class="text-center d-block mx-auto" style="max-width: 550px;">
           <h2 class="heading-kontak-text mb-3">Hubungi <span class="text-islamic">Kami</span></h2>
-          <p style="font-size: 16px;">Islamic Web situs dakwah islam yang berpijak di atas pijakan Ahlussunnah wal jama'ah
+          <p style="font-size: 16px;">Islamic Web situs dakwah islam yang berpijak di atas pijakan Ahlussunnah wal
+            jama'ah
             dalam akidah dan amal</p>
         </div>
-        <iframe class="d-block mx-auto mt-4"
+        <iframe class="d-block mx-auto mt-4 w-100 border-0 shadow-lg"
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.3797874887214!2d112.72634007442568!3d-7.311161171883016!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fbd1cb925a1d%3A0x1dbecb0b2e9b059f!2sUniversitas%20Telkom%20Surabaya!5e0!3m2!1sen!2sid!4v1713872294629!5m2!1sen!2sid"
-          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+          height="450" style="border:0;" allowfullscreen="" loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <div class="mt-4 contact">
-          <div>
+        <div class="mt-4 contact d-block mx-auto">
+          <div class="mb-2" style="font-size: 16px;">
             <span class="fw-semibold text-islamic">Alamat: </span>
             <span>Jl. Ketintang No.156, Ketintang, Kec. Gayungan, Surabaya, Jawa Timur 60231</span>
+          </div>
+          <div class="mb-2" style="font-size: 16px;">
+            <span class="fw-semibold text-islamic">Email : </span>
+            <span>islamicweb@gmail.com</span>
+          </div>
+          <div class="mb-2" style="font-size: 16px;">
+            <span class="fw-semibold text-islamic">Narahubung : </span>
+            <span>0812-4998-3998</span>
           </div>
         </div>
       </div>
     </section>
 
-   
+
 
     <footer class="pt-5 my-4 bg-white footer-border-secondary">
       <div class="container">
@@ -219,6 +236,63 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+  <script>
+    // handler message form
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nama = document.getElementById('nama-lengkap').value;
+      const email = document.getElementById('email-form').value;
+      const saran = document.getElementById('saran-masukan').value;
+      const errorNama = document.getElementById('error-nama');
+      const errorEmail = document.getElementById('error-email');
+      const errorSaran = document.getElementById('error-saran');
+
+      // nama tidak boleh kosong, minimal 3 karakter, maksimal 50 karakter, tidak boleh angka, tidak boleh simbol/karakter khusus
+      if (nama === '') {
+        errorNama.innerHTML = 'Nama tidak boleh kosong';
+      } else if (nama.length < 3) {
+        errorNama.innerHTML = 'Nama minimal 3 karakter';
+      } else if (nama.length > 50) {
+        errorNama.innerHTML = 'Nama maksimal 50 karakter';
+      } else if (/\d/.test(nama)) {
+        errorNama.innerHTML = 'Nama tidak boleh mengandung angka';
+      } else if (/[!@#$%^&*(),.?":{}|<>]/.test(nama)) {
+        errorNama.innerHTML = 'Nama tidak boleh mengandung simbol/karakter khusus';
+      } else {
+        errorNama.innerHTML = '';
+      }
+
+      // email tidak boleh kosong, harus sesuai format email
+      if (email === '') {
+        errorEmail.innerHTML = 'Email tidak boleh kosong';
+      } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        errorEmail.innerHTML = 'Email tidak valid';
+      } else {
+        errorEmail.innerHTML = '';
+      }
+
+      // saran tidak boleh kosong, minimal 10 karakter, maksimal 500 karakter
+
+      if (saran === '') {
+        errorSaran.innerHTML = 'Saran tidak boleh kosong';
+      } else if (saran.length < 10) {
+        errorSaran.innerHTML = 'Saran minimal 10 karakter';
+      } else if (saran.length > 500) {
+        errorSaran.innerHTML = 'Saran maksimal 500 karakter';
+      } else {
+        errorSaran.innerHTML = '';
+      }
+
+      if (nama !== '' && nama.length >= 3 && nama.length <= 50 && !/\d/.test(nama) && !/[!@#$%^&*(),.?":{}|<>]/.test(nama) && email !== '' && /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) && saran !== '' && saran.length >= 10 && saran.length <= 500) {
+        alert('Pesan berhasil dikirim');
+        // adding to url because using action get
+        window.location.href = `?nama=${nama}&email=${email}&saran=${saran}`;
+      }
+    });
+
+
+  </script>
 </body>
 
 </html>
