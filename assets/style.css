@@ -163,3 +163,16 @@ body {
   margin-top: 8rem;
   margin-bottom: 8rem;
 }
+
+.btn-islamic {
+  background-color: #00602E;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.btn-islamic:hover {
+  background-color: #004d24 !important;
+  color: #fff !important;
+}
+

@@ -120,7 +120,7 @@
               </div>
               <div x-show="filteredSurah.length > 0" class="row row-deck">
                 <template x-for="item in filteredSurah" :key="item.number">
-                  <div class="col-12 col-md-4 mb-3">
+                  <div class="col-12 col-md-6 col-lg-4 mb-3">
                     <a :href="`/detail-surah.html?surah=${item.number}`"
                       class="card shadow-sm rounded-3 py-3 border-1 border-wide card-surah">
                       <div class="card-body">

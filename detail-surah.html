@@ -40,9 +40,6 @@
       background-color: #E8FFEC !important;
     }
 
-    .text-listening-surah {
-      color: #3FB750 !important;
-    }
   </style>
 </head>
 
@@ -113,11 +110,11 @@
                         <span>Artinya: </span>
                         <span class="fst-italic" x-text="surah.bismillah.translation"></span>
                       </div>
-                      <div class="audio ms-4">
+                      <div class="audio ms-0 ms-lg-4">
                         <button id="bismillah" class="btn shadow-sm rounded-3"
                           @click="playAyahs(surah.bismillah.audio.alafasy, `bismillah`)"
                           x-text="isPlaying(`bismillah`) ? 'Hentikan' : 'Dengarkan'"
-                          :class="isPlaying(`bismillah`) ? 'text-listening-surah' : ''"></button>
+                          :class="isPlaying(`bismillah`) ? 'btn-danger' : 'btn-islamic'"></button>
                       </div>
 
                     </div>
@@ -144,11 +141,11 @@
                           <span>Artinya: </span>
                           <span class="fst-italic" x-text="ayahs.translation"></span>
                         </div>
-                        <div class="audio ms-4">
+                        <div class="audio ms-0 ms-lg-4">
                           <button :id="`ayah_${ayahs.number.inSurah}`" class="btn shadow-sm rounded-3"
                             @click="playAyahs(ayahs.audio.alafasy, `ayah_${ayahs.number.inSurah}`)"
                             x-text="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'Hentikan' : 'Dengarkan'"
-                            :class="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'text-listening-surah' : ''"></button>
+                            :class="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'btn-danger' : 'btn-islamic'"></button>
                         </div>
 
                       </div>
