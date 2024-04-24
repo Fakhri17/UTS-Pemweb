@@ -158,3 +158,8 @@ body {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.section-content {
+  margin-top: 8rem;
+  margin-bottom: 8rem;
+}
