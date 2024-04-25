@@ -1,14 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="./assets/images/favicon.ico" type="image/x-icon">
-  <title>Surah | Islamic Web Telkom Surabaya</title>
+  <title>Tentang Kami | Islamic Web Telkom Surabaya</title>
 
-  
-  <meta name="title" content="Surah | Islamic Web Telkom Surabaya" />
+
+  <meta name="title" content="Tentang Kami | Islamic Web Telkom Surabaya" />
   <meta name="description"
     content="Merupakan website untuk membantu mahasiswa terutama yang beragama Islam yang ada di Universitas Telkom Surabaya untuk membaca Al-Qur'an secara online dan melihat jadwal sholat" />
 
@@ -37,22 +37,27 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="./assets/style.css">
   <style>
-    .img-surah {
+    .img-about {
       width: 100%;
       max-width: 200px;
       margin: 0 auto;
     }
 
-    .heading-surah-text {
+    .heading-about-text {
       font-size: 40px;
       font-weight: 600;
+    }
+
+    .img-visi{
+      width: 450px;
+      margin: 0 auto;
+      display: block;
     }
   </style>
 </head>
 
 <body>
   <main>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg px-0 py-2 shadow bg-white fixed-top">
       <div class="container">
         <!-- Logo -->
@@ -68,10 +73,10 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <div class="navbar-nav ms-auto">
             <a class="nav-item nav-link fw-medium hover-nav" href="/" style="font-size: 14px;">Home</a>
-            <a class="nav-item nav-link fw-medium hover-nav" href="/tentang-kami.html" style="font-size: 14px;">Tentang
+            <a class="nav-item nav-link fw-medium hover-nav active-navbar" href="/tentang-kami.html"
+              style="font-size: 14px;">Tentang
               Kami</a>
-            <a class="nav-item nav-link fw-medium hover-nav active-navbar" href="/surah.html"
-              style="font-size: 14px;">Surah</a>
+            <a class="nav-item nav-link fw-medium hover-nav" href="/surah.html" style="font-size: 14px;">Surah</a>
             <a class="nav-item nav-link fw-medium hover-nav" href="/jadwal-sholat.html" style="font-size: 14px;">Jadwal
               Sholat</a>
             <a class="nav-item nav-link fw-medium hover-nav" href="/kontak-kami.html" style="font-size: 14px;">Kontak
@@ -80,63 +85,111 @@
         </div>
       </div>
     </nav>
-    <!-- End Navbar -->
 
     <section class="my-5">
       <div class="container">
-        <div x-data="allSurah()" x-init="connect()">
-          <div class="text-center mb-5">
-            <img class="img-surah" src="./assets/images/surah.png" alt="">
-            <p class="text-islamic fw-semibold my-3" style="font-size: 20px;">Surah Al-Quran</p>
-            <div class="heading-surah">
-              <h2 class="heading-surah-text">Bacalah <span class="text-islamic">Al-Quran</span></h2>
-              <h2 class="heading-surah-text">Dengan <span class="text-islamic">Tartil</span></h2>
-            </div>
-            <div class="input-icon my-4 shadow rounded-4 d-block mx-auto" style="max-width: 450px;">
-              <span class="input-icon-addon ps-4">
-                <i class="bi bi-search"></i>
-              </span>
-              <input type="text" value="" class="form-control py-3 rounded-4 ps-5"
-                placeholder="cari Surah (ex: Al-Fatihah)" x-model="search" />
+        <div class="text-center mb-5">
+          <img class="img-about" src="./assets/images/about.png" alt="img about">
+          <div class="heading-about">
+            <h2 class="heading-about-text">Tentang <span class="text-islamic">Kami</span></h2>
+            <p class="mt-3">Menuju Masa Depan yang Lebih Baik Bersama Islam</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5" style="background:#F0F4F2;">
+      <div class="container">
+        <div class="text-center mb-5">
+          <p class="text-islamic fw-semibold fs-2 mb-4">Tentang Kami</p>
+          <h2 class="heading-about-text mb-2">Kelompok</h2>
+          <h2 class="heading-about-text mb-0" style="line-height: 1.2;">Pemrograman Website</h2>
+          <p class="mt-4">Tim yang membuat dan menghandel seluruh halaman website</p>
+        </div>
+        <div class="row">
+          <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+            <div class="card shadow h-100">
+              <div class="card-body p-4 text-center">
+                <span class="avatar avatar-xl mb-3 rounded-circle"
+                  style="background-image: url(./assets/images/fakhri.png)"></span>
+                <h3 class="m-0 mb-1"><a href="#">Fakhri Alauddin</a></h3>
+                <div class="mt-1 mb-1">
+                  <span class="badge bg-success-lt">1203220131</span>
+                </div>
+                <div class="text-secondary">IF 02-01</div>
+              </div>
             </div>
           </div>
-          <template x-if="loading">
-            <div class="loading-spinner">
-              <h2 class="text-center mb-3">Loading Content</h2>
-              <div class="space-x justify-content-center">
-                <div class="spinner-grow text-islamic" role="status"></div>
-                <div class="spinner-grow text-islamic" role="status"></div>
-                <div class="spinner-grow text-islamic" role="status"></div>
-                <div class="spinner-grow text-islamic" role="status"></div>
-                <div class="spinner-grow text-islamic" role="status"></div>
-                <div class="spinner-grow text-islamic" role="status"></div>
+          <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+            <div class="card shadow h-100">
+              <div class="card-body p-4 text-center">
+                <span class="avatar avatar-xl mb-3 rounded-circle"
+                  style="background-image: url(./assets/images/riyan.png)"></span>
+                <h3 class="m-0 mb-1"><a href="#">M. Riyan Akbari</a></h3>
+                <div class="mt-1 mb-1">
+                  <span class="badge bg-success-lt">1203220130</span>
+                </div>
+                <div class="text-secondary">IF 02-01</div>
               </div>
             </div>
-          </template>
-          <template x-if="!loading">
-            <div>
-              <div x-show="filteredSurah.length == 0" class="col-12">
-                <h2 class="text-center text-islamic">Surah Tidak Ditemukan</h2>
-              </div>
-              <div x-show="filteredSurah.length > 0" class="row row-deck">
-                <template x-for="item in filteredSurah" :key="item.number">
-                  <div class="col-12 col-md-6 col-lg-4 mb-3">
-                    <a :href="`/detail-surah.html?surah=${item.number}`"
-                      class="card shadow-sm rounded-3 py-3 border-1 border-wide card-surah">
-                      <div class="card-body">
-                        <h3 class="card-title mb-1 fw-semibold text-islamic"
-                          x-text="`${item.number}. Surah ${item.name} (${item.translation})`">
-                        </h3>
-                        <span class="text-dark" x-text="`${item.revelation} - (${item.numberOfAyahs}) Ayat`"></span>
-
-                      </div>
-                    </a>
-                  </div>
-                </template>
+          </div>
+          <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+            <div class="card shadow h-100">
+              <div class="card-body p-4 text-center">
+                <span class="avatar avatar-xl mb-3 rounded-circle"
+                  style="background-image: url(./assets/images/dimas.png)"></span>
+                <h3 class="m-0 mb-1"><a href="#">Fakhri Alauddin</a></h3>
+                <div class="mt-1 mb-1">
+                  <span class="badge bg-success-lt">1203220130</span>
+                </div>
+                <div class="text-secondary">IF 02-01</div>
               </div>
             </div>
+          </div>
+          <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+            <div class="card shadow h-100">
+              <div class="card-body p-4 text-center">
+                <span class="avatar avatar-xl mb-3 rounded-circle"
+                  style="background-image: url(./assets/images/akbar.png)"></span>
+                <h3 class="m-0 mb-1"><a href="#">Akbar Muhammad Sadat</a></h3>
+                <div class="mt-1 mb-1">
+                  <span class="badge bg-success-lt">1203220130</span>
+                </div>
+                <div class="text-secondary">IF02-01</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          </template>
+    <section class="my-5">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-12 col-lg-6">
+            <h2 class="heading-about-text" style="line-height: 1.2;">Visi dan <span class="text-islamic">Misi</span>
+            </h2>
+            <p>Di era digital yang penuh dengan informasi dan tantangan, umat Muslim membutuhkan sumber informasi dan
+              edukasi Islam yang kredibel, mudah diakses, dan inspiratif. Islamic Web hadir untuk memenuhi kebutuhan
+              tersebut dengan visi dan misi yaitu :</p>
+            <div class="my-4">
+              <h3 class="text-islamic" style="font-size: 20px;">Visi</h3>
+              <ul>
+                <li class="fw-medium h4 mb-1">Menjadi website Islam terkemuka (global reach).</li>
+                <li class="fw-medium h4 mb-1">Membangun masyarakat Islam yang berakhlak mulia.</li>
+              </ul>
+            </div>
+            <div class="my-4">
+              <h3 class="text-islamic" style="font-size: 20px;">Misi</h3>
+              <ul>
+                <li class="fw-medium h4 mb-1">Menyediakan informasi Islam kredibel (akurasi).</li>
+                <li class="fw-medium h4 mb-1">Mudah diakses (user-friendly).</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 order-first order-lg-last mb-4 mb-lg-0">
+            <img src="./assets/images/visi-misi.png" alt="" class="img-visi">
+          </div>
         </div>
       </div>
     </section>
@@ -222,43 +275,6 @@
       <i class="bi bi-arrow-up text-white"></i>
     </button>
   </main>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script src="./assets/script.js"></script>
-  <script>
-    // get api from https://quran-api-id.vercel.app/surahs/
-    function allSurah() {
-      return {
-        surah: [],
-        loading: true,
-        search: '',
-        connect() {
-          fetch(`https://quran-api-id.vercel.app/surahs/`)
-            .then(response => response.json())
-            .then(data => {
-              this.surah = data;
-              this.loading = false;
-              console.log(this.surah);
-            })
-            .catch(error => {
-              console.error('Error fetching data:', error);
-              this.loading = false;
-            });
-        },
-        get filteredSurah() {
-          if (this.search === '') {
-            return this.surah;
-          }
-          return this.surah.filter((item) => {
-            return item.name.toLowerCase().includes(this.search.toLowerCase()) || item.translation.toLowerCase().includes(this.search.toLowerCase());
-          });
-        }
-      }
-    }
-
-  </script>
 </body>
 
 </html>
