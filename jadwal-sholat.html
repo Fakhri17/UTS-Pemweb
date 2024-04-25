@@ -49,10 +49,16 @@
       font-weight: 600;
     }
 
-    .select-jadwal:hover{
+    .select-jadwal:hover, .select-jadwal:focus, .select-jadwal:focus-within .select-jadwal:active {
       background-color: #00602e !important;
       color: white !important;
     }
+
+    .dropdown-item.active, .dropdown-item:active, .select-jadwal:active{
+      background-color: #00602e !important;
+      color: white !important;
+    }
+
   </style>
 </head>
 
@@ -109,16 +115,21 @@
             <!-- Main content template -->
             <div class="mb-3">
               <div class="form-label">Pilih Wilayah</div>
-              <input type="text" class="form-control shadow border-wide cursor-pointer" x-model="search" placeholder="Cari Kota"
-                @click="showAllCities = true" @click.outside="showAllCities = false">
+              <input type="text" class="form-control shadow border-wide cursor-pointer" x-model="search"
+                placeholder="Cari Kota" @click="showAllCities = true" @click.outside="showAllCities = false"
+                @keydown.arrow-down.prevent="navigateDropdown('down')"
+                @keydown.arrow-up.prevent="navigateDropdown('up')" @keydown.enter.prevent="selectCityFromKeyboard">
               <div x-show="showAllCities" class="dropdown shadow">
                 <div class="dropdown-menu show" style="width: 100%;">
                   <div x-show="displayNotFound()" class="dropdown-item">No cities found</div>
-                  <template x-for="city in filteredCities" :key="city.id">
-                    <div @click="selectCity(city.id, city.lokasi)" class="dropdown-item cursor-pointer select-jadwal" x-text="city.lokasi"></div>
+                  <template x-for="(city, index) in filteredCities" :key="city.id">
+                    <div @click="selectCity(city.id, city.lokasi)" class="dropdown-item cursor-pointer select-jadwal"
+                      x-text="city.lokasi" :class="{ 'active': index === selectedIndex }"></div>
                   </template>
                 </div>
               </div>
+
+
               <div class="mt-4">
                 <!-- loading lokasi & jadwal sholat -->
                 <template x-if="loadingJadwal">
@@ -316,6 +327,7 @@
         search: '',
         selectedCity: '',
         showAllCities: false,
+        selectedIndex: -1,
         formattedDateMonth: formattedDateMonth,
         connect() {
           fetch('https://api.myquran.com/v2/sholat/kota/semua')
@@ -351,9 +363,26 @@
             return city.lokasi.toLowerCase().includes(this.search.toLowerCase());
           });
         },
+        navigateDropdown(direction) {
+          const cities = this.filteredCities();
+          if (cities.length === 0) return;
+          if (direction === 'down') {
+            this.selectedIndex = (this.selectedIndex + 1) % cities.length;
+          } else if (direction === 'up') {
+            this.selectedIndex = this.selectedIndex > 0 ? this.selectedIndex - 1 : cities.length - 1;
+          }
+        },
+        selectCityFromKeyboard() {
+          const cities = this.filteredCities();
+          if (this.selectedIndex >= 0 && this.selectedIndex < cities.length) {
+            const selectedCity = cities[this.selectedIndex];
+            this.selectCity(selectedCity.id, selectedCity.lokasi);
+          }
+        },
         selectCity(id, lokasi) {
           this.showAllCities = false;
           this.search = lokasi;
+          this.selectedIndex = -1; // Reset selectedIndex after selecting a city
           this.jadwal(id);
         },
         displayNotFound() {
