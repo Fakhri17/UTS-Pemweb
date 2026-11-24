@@ -59,6 +59,25 @@
       color: white !important;
     }
 
+    .city-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .next-prayer {
+      background-color: #E8FFEC;
+      border-radius: 0.5rem;
+    }
+
+    .row-today td {
+      background-color: #E8FFEC !important;
+      font-weight: 600;
+    }
+
   </style>
 </head>
 
@@ -115,55 +134,76 @@
             <!-- Main content template -->
             <div class="mb-3">
               <div class="form-label">Pilih Wilayah</div>
-              <input type="text" class="form-control shadow border-wide cursor-pointer" x-model="search"
-                placeholder="Cari Kota" @click="showAllCities = true" @click.outside="showAllCities = false"
-                @keydown.arrow-down.prevent="navigateDropdown('down')"
-                @keydown.arrow-up.prevent="navigateDropdown('up')" @keydown.enter.prevent="selectCityFromKeyboard">
-              <div x-show="showAllCities" class="dropdown shadow">
-                <div class="dropdown-menu show" style="width: 100%;">
-                  <div x-show="displayNotFound()" class="dropdown-item">No cities found</div>
+              <div class="position-relative" @click.outside="showAllCities = false">
+                <div class="input-group shadow">
+                  <input type="text" class="form-control border-wide cursor-pointer" x-model="search"
+                    placeholder="Cari Kota" @focus="showAllCities = true; $event.target.select()" @click="showAllCities = true"
+                    @input="showAllCities = true; selectedIndex = -1"
+                    @keydown.escape="showAllCities = false"
+                    @keydown.arrow-down.prevent="navigateDropdown('down')"
+                    @keydown.arrow-up.prevent="navigateDropdown('up')" @keydown.enter.prevent="selectCityFromKeyboard">
+                  <button type="button" class="btn btn-islamic" @click="detectCity()" :disabled="detecting"
+                    title="Deteksi lokasi saya">
+                    <span x-show="detecting" class="spinner-border spinner-border-sm"></span>
+                    <i x-show="!detecting" class="bi bi-geo-alt-fill"></i>
+                  </button>
+                </div>
+                <div x-show="showAllCities" x-ref="cityList" class="dropdown-menu show w-100 city-dropdown shadow">
+                  <div x-show="displayNotFound()" class="dropdown-item">Kota tidak ditemukan</div>
                   <template x-for="(city, index) in filteredCities" :key="city.id">
                     <div @click="selectCity(city.id, city.lokasi)" class="dropdown-item cursor-pointer select-jadwal"
                       x-text="city.lokasi" :class="{ 'active': index === selectedIndex }"></div>
                   </template>
                 </div>
               </div>
+              <small x-show="locationStatus" class="d-block mt-2 text-muted" x-text="locationStatus"></small>
 
 
               <div class="mt-4">
                 <!-- loading lokasi & jadwal sholat -->
                 <template x-if="loadingJadwal">
-                  <h2 class="text-center mb-3">Pilih Wilayah</h2>
+                  <h2 class="text-center mb-3"
+                    x-text="detecting ? 'Mendeteksi lokasi Anda...' : (cityId ? 'Memuat jadwal...' : 'Pilih Wilayah')"></h2>
                 </template>
                 <template x-if="!loadingJadwal">
                   <div class="my-5">
                     <div class="text-center mb-4">
                       <h2 x-text="lokasi" class="text-center mb-3 heading-city-text"></h2>
                       <p x-text="formattedDateMonth" style="font-size: 16px;"></p>
+                      <div class="display-6 fw-semibold text-islamic" x-text="clock"></div>
                     </div>
+                    <template x-if="nextPrayer">
+                      <div class="card bg-islamic text-white text-center shadow rounded-3 mb-4 mx-auto"
+                        style="max-width: 450px;">
+                        <div class="card-body">
+                          <div x-text="`Menuju ${nextPrayer.name} (${nextPrayer.time})`"></div>
+                          <div class="display-5 fw-bold" x-text="countdown"></div>
+                        </div>
+                      </div>
+                    </template>
                     <div class="card py-3 mt-3 mb-5 shadow-lg rounded-3">
                       <div class="row">
                         <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-end">
                           <p class="mb-1 text-islamic fw-semibold">Imsak</p>
                           <p class="mb-0" x-text="jadwalToday[0].imsak"></p>
                         </div>
-                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-x ">
+                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-x" :class="nextClass('Subuh')">
                           <p class="mb-1 text-islamic fw-semibold">Subuh</p>
                           <p class="mb-0" x-text="jadwalToday[0].subuh"></p>
                         </div>
-                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-x ">
+                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-x" :class="nextClass('Dzuhur')">
                           <p class="mb-1 text-islamic fw-semibold">Dzuhur</p>
                           <p class="mb-0" x-text="jadwalToday[0].dzuhur"></p>
                         </div>
-                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-x ">
+                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-x" :class="nextClass('Ashar')">
                           <p class="mb-1 text-islamic fw-semibold">Ashar</p>
                           <p class="mb-0" x-text="jadwalToday[0].ashar"></p>
                         </div>
-                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-x ">
+                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-x" :class="nextClass('Maghrib')">
                           <p class="mb-1 text-islamic fw-semibold">Maghrib</p>
                           <p class="mb-0" x-text="jadwalToday[0].maghrib"></p>
                         </div>
-                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-start">
+                        <div class="col-6 col-lg-2 text-center my-2 my-lg-0 border-start" :class="nextClass('Isya')">
                           <p class="mb-1 text-islamic fw-semibold">Isya</p>
                           <p class="mb-0" x-text="jadwalToday[0].isya"></p>
                         </div>
@@ -171,8 +211,18 @@
                     </div>
                     <div class="text-center mb-4 mt-5">
                       <h2 class="text-center mb-3 heading-city-text">Jadwal 1 Bulan</h2>
+                      <div class="d-flex justify-content-center align-items-center gap-3">
+                        <button type="button" class="btn btn-islamic" @click="changeMonth(-1)" :disabled="loadingTable">
+                          <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <span class="fw-semibold" style="min-width: 160px;"
+                          x-text="`${monthNames[viewMonth - 1]} ${viewYear}`"></span>
+                        <button type="button" class="btn btn-islamic" @click="changeMonth(1)" :disabled="loadingTable">
+                          <i class="bi bi-chevron-right"></i>
+                        </button>
+                      </div>
                     </div>
-                    <div class="table-responsive bg-white shadow ">
+                    <div class="table-responsive bg-white shadow" :class="loadingTable ? 'opacity-50' : ''">
                       <table class="table table-vcenter table-bordered border-dark">
                         <thead>
                           <tr>
@@ -189,7 +239,7 @@
                         </thead>
                         <tbody>
                           <template x-for="jadwal in jadwalSholat" :key="jadwal.date">
-                            <tr>
+                            <tr :class="jadwal.date === todayIso ? 'row-today' : ''">
                               <td x-text="formatedDateByMonth(jadwal.tanggal)"></td>
                               <td x-text="jadwal.imsak"></td>
                               <td x-text="jadwal.subuh"></td>
@@ -315,6 +365,58 @@
     // format date Senin, 22 April 2024
     let formattedDateMonth = `${daysOfWeek[currentDate.getDay()]}, ${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
 
+    function toIsoDate(date) {
+      return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    }
+
+    const prayerKeys = { Subuh: 'subuh', Dzuhur: 'dzuhur', Ashar: 'ashar', Maghrib: 'maghrib', Isya: 'isya' };
+    const defaultCity = { id: '1638', lokasi: 'KOTA SURABAYA' };
+
+    function normalizeCityName(name) {
+      return (name || '').toLowerCase()
+        .replace(/\b(kota|kab\.?|kabupaten|city|regency|administrative|special region of)\b/g, ' ')
+        .replace(/[^a-z\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    // GeoIP memakai nama Inggris (mis. "South Tangerang"), myquran memakai "KOTA TANGERANG SELATAN"
+    function geoNameCandidates(name) {
+      const directions = { south: 'selatan', north: 'utara', east: 'timur', west: 'barat', central: 'tengah' };
+      const words = normalizeCityName(name).split(' ').filter(Boolean);
+      const direction = words.find(word => directions[word]);
+      const base = words.filter(word => !directions[word]).join(' ');
+      return direction ? [`${base} ${directions[direction]}`, base] : [base];
+    }
+
+    function matchCity(cities, names) {
+      for (const name of names) {
+        for (const candidate of geoNameCandidates(name)) {
+          if (!candidate) continue;
+          const matches = cities.filter(city => normalizeCityName(city.lokasi) === candidate);
+          if (matches.length) {
+            return matches.find(city => city.lokasi.startsWith('KOTA')) || matches[0];
+          }
+        }
+      }
+      return null;
+    }
+
+    function fetchGeoIp() {
+      const sources = [
+        'https://get.geojs.io/v1/ip/geo.json',
+        'https://ipwho.is/',
+      ];
+      return sources.reduce((previous, source) => previous.catch(() =>
+        fetch(source, { signal: AbortSignal.timeout(5000) })
+          .then(response => response.json())
+          .then(data => {
+            if (!data.city && !data.region) throw new Error('Lokasi tidak tersedia');
+            return data;
+          })
+      ), Promise.reject());
+    }
+
 
     function jadwalSholat() {
       return {
@@ -329,34 +431,110 @@
         showAllCities: false,
         selectedIndex: -1,
         formattedDateMonth: formattedDateMonth,
+        monthNames: months,
+        todayIso: toIsoDate(currentDate),
+        now: new Date(),
+        cityId: null,
+        jadwalCurrentMonth: [],
+        viewYear: currentDate.getFullYear(),
+        viewMonth: currentDate.getMonth() + 1,
+        loadingTable: false,
+        detecting: false,
+        locationStatus: '',
         connect() {
+          setInterval(() => this.now = new Date(), 1000);
           fetch('https://api.myquran.com/v2/sholat/kota/semua')
             .then(response => response.json())
             .then(data => {
               this.allCity = data.data;
               this.loading = false;
+              this.detectCity();
             })
             .catch(error => {
               console.error('Error fetching data:', error);
               this.loading = false;
             });
         },
+        detectCity() {
+          this.detecting = true;
+          this.loadingJadwal = true;
+          this.locationStatus = 'Mendeteksi lokasi Anda...';
+          fetchGeoIp()
+            .then(geo => {
+              const city = matchCity(this.allCity, [geo.city, geo.region]);
+              if (!city) throw new Error(`Kota "${geo.city}" tidak ada di daftar`);
+              this.selectCity(city.id, city.lokasi);
+              this.locationStatus = `Lokasi terdeteksi otomatis: ${city.lokasi}`;
+            })
+            .catch(error => {
+              console.error('Error detecting location:', error);
+              const fallback = JSON.parse(localStorage.getItem('kotaSholat') || 'null') || defaultCity;
+              this.selectCity(fallback.id, fallback.lokasi);
+              this.locationStatus = `Lokasi tidak terdeteksi, menampilkan ${fallback.lokasi}`;
+            })
+            .finally(() => this.detecting = false);
+        },
         jadwal(id) {
           this.loadingJadwal = true;
+          this.cityId = id;
+          this.viewYear = currentDate.getFullYear();
+          this.viewMonth = currentDate.getMonth() + 1;
           fetch(`https://api.myquran.com/v2/sholat/jadwal/${id}/${getYearNumber}/${monthZero}`)
             .then(response => response.json())
             .then(data => {
               this.jadwalSholat = data.data.jadwal;
+              this.jadwalCurrentMonth = data.data.jadwal;
               this.lokasi = data.data.lokasi;
               this.jadwalToday = data.data.jadwal.filter(jadwal => jadwal.tanggal === formattedDate);
-              console.log(this.jadwalToday[0].imsak);
               this.loadingJadwal = false;
-              console.log(this.lokasi);
             })
             .catch(error => {
               console.error('Error fetching data:', error);
               this.loadingJadwal = false;
             });
+        },
+        changeMonth(delta) {
+          const target = new Date(this.viewYear, this.viewMonth - 1 + delta, 1);
+          const year = target.getFullYear();
+          const month = target.getMonth() + 1;
+          this.loadingTable = true;
+          fetch(`https://api.myquran.com/v2/sholat/jadwal/${this.cityId}/${year}/${month.toString().padStart(2, '0')}`)
+            .then(response => response.json())
+            .then(data => {
+              this.jadwalSholat = data.data.jadwal;
+              this.viewYear = year;
+              this.viewMonth = month;
+              this.loadingTable = false;
+            })
+            .catch(error => {
+              console.error('Error fetching data:', error);
+              this.loadingTable = false;
+            });
+        },
+        get clock() {
+          return this.now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        },
+        get nextPrayer() {
+          const today = this.jadwalToday[0];
+          if (!today) return null;
+          for (const [name, key] of Object.entries(prayerKeys)) {
+            const time = new Date(`${today.date}T${today[key]}:00`);
+            if (time > this.now) return { name, time: today[key], at: time };
+          }
+          const tomorrow = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
+          const tomorrowJadwal = this.jadwalCurrentMonth.find(jadwal => jadwal.date === toIsoDate(tomorrow));
+          if (!tomorrowJadwal) return null;
+          return { name: 'Subuh', time: tomorrowJadwal.subuh, at: new Date(`${tomorrowJadwal.date}T${tomorrowJadwal.subuh}:00`) };
+        },
+        get countdown() {
+          const diff = Math.max(0, Math.floor((this.nextPrayer.at - this.now) / 1000));
+          return [Math.floor(diff / 3600), Math.floor(diff / 60) % 60, diff % 60]
+            .map(value => value.toString().padStart(2, '0'))
+            .join(':');
+        },
+        nextClass(name) {
+          const next = this.nextPrayer;
+          return next && next.name === name && next.at.getDate() === currentDate.getDate() ? 'next-prayer' : '';
         },
         filteredCities() {
           return this.allCity.filter(city => {
@@ -371,6 +549,11 @@
           } else if (direction === 'up') {
             this.selectedIndex = this.selectedIndex > 0 ? this.selectedIndex - 1 : cities.length - 1;
           }
+          this.showAllCities = true;
+          this.$nextTick(() => {
+            const active = this.$refs.cityList.querySelector('.dropdown-item.active');
+            if (active) active.scrollIntoView({ block: 'nearest' });
+          });
         },
         selectCityFromKeyboard() {
           const cities = this.filteredCities();
@@ -383,6 +566,8 @@
           this.showAllCities = false;
           this.search = lokasi;
           this.selectedIndex = -1; // Reset selectedIndex after selecting a city
+          this.locationStatus = '';
+          localStorage.setItem('kotaSholat', JSON.stringify({ id, lokasi }));
           this.jadwal(id);
         },
         displayNotFound() {

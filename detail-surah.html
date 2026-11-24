@@ -40,6 +40,59 @@
       background-color: #E8FFEC !important;
     }
 
+    .surah-toolbar {
+      position: sticky;
+      top: 70px;
+      z-index: 10;
+    }
+
+    .ayah-item {
+      scroll-margin-top: 160px;
+    }
+
+    .form-range::-webkit-slider-thumb {
+      background-color: #00602e;
+    }
+
+    .border-islamic {
+      border: 2px solid #00602e !important;
+    }
+
+    .playing-badge {
+      float: left;
+    }
+
+    .audio-player {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1030;
+      border-top: 1px solid #e6e7e9;
+    }
+
+    .btn-play {
+      width: 48px;
+      height: 48px;
+    }
+
+    .player-progress {
+      height: 1rem;
+    }
+
+    body.player-open {
+      padding-bottom: 130px;
+    }
+
+    body.player-open #btn-back-to-top {
+      bottom: 140px;
+    }
+
+    .form-check-input:checked {
+      background-color: #00602e;
+      border-color: #00602e;
+    }
+
   </style>
 </head>
 
@@ -88,33 +141,81 @@
               </div>
             </div>
           </template>
-          <template x-if="!loading">
+          <template x-if="!loading && error">
+            <div class="text-center">
+              <h2 class="text-islamic">Surah tidak ditemukan</h2>
+              <a href="/surah.html" class="btn btn-islamic mt-2">Kembali ke Daftar Surah</a>
+            </div>
+          </template>
+          <template x-if="!loading && !error">
             <div class="row">
               <div class="col-12">
                 <div class="text-center">
-                  <h1 class="text-black mb-3" x-text="`Surah ${surah.name}`" style="font-size: 40px;"></h1>
-                  <div class="h1 text-black" x-text="`(${surah.translation})`" style="font-size: 40px;"></div>
-                  <div class="mt-4 text-islamic" x-text="`${surah.revelation} - (${surah.numberOfAyahs}) Ayat`"
+                  <div class="text-islamic mb-2" x-text="surah.nama" style="font-size: 36px;"></div>
+                  <h1 class="text-black mb-3" x-text="`Surah ${surah.namaLatin}`" style="font-size: 40px;"></h1>
+                  <div class="h1 text-black" x-text="`(${surah.arti})`" style="font-size: 40px;"></div>
+                  <div class="mt-4 text-islamic" x-text="`${surah.tempatTurun} - (${surah.jumlahAyat}) Ayat`"
                     style="font-size: 16px;"></div>
+                  <button type="button" class="btn btn-link text-islamic mt-2" @click="showDescription = !showDescription">
+                    <i class="bi me-1" :class="showDescription ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                    Tentang Surah
+                  </button>
+                  <p x-show="showDescription" x-transition class="text-black mx-auto mt-2" style="max-width: 800px;"
+                    x-text="description"></p>
                 </div>
+
+                <div class="card shadow rounded-4 mt-4 surah-toolbar">
+                  <div class="card-body d-flex flex-wrap align-items-center gap-3">
+                    <button type="button" class="btn shadow-sm rounded-3" @click="togglePlayAll()"
+                      :class="playAll && playingAyahId ? 'btn-danger' : 'btn-islamic'">
+                      <i class="bi me-1" :class="playAll && playingAyahId ? 'bi-stop-fill' : 'bi-play-fill'"></i>
+                      <span x-text="playAll && playingAyahId ? 'Hentikan' : 'Putar Semua'"></span>
+                    </button>
+                    <select class="form-select w-auto" x-model="qari" @change="changeQari()">
+                      <template x-for="(name, key) in qariList" :key="key">
+                        <option :value="key" x-text="name" :selected="key === qari"></option>
+                      </template>
+                    </select>
+                    <div class="d-flex align-items-center" title="Ukuran teks Arab">
+                      <i class="bi bi-fonts me-2"></i>
+                      <input type="range" class="form-range" min="20" max="48" step="2" style="width: 120px;"
+                        x-model.number="arabSize" @change="savePreference('arabSize', arabSize)">
+                    </div>
+                    <label class="form-check form-switch mb-0">
+                      <input class="form-check-input" type="checkbox" x-model="showLatin"
+                        @change="savePreference('showLatin', showLatin)">
+                      <span class="form-check-label">Latin</span>
+                    </label>
+                    <div class="input-group w-auto ms-lg-auto">
+                      <input type="number" class="form-control" style="width: 110px;" min="1" :max="surah.jumlahAyat"
+                        placeholder="Ayat ke-" x-model.number="jumpAyah" @keydown.enter.prevent="goToAyah(jumpAyah)">
+                      <button type="button" class="btn btn-islamic" @click="goToAyah(jumpAyah)">Lompat</button>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="my-5">
 
-                  <div x-show="surah.name != 'Al-Fatihah'" class="my-5">
-                    <div class="mb-3 card py-3 rounded-4 shadow" :class="isPlaying(`bismillah`) ? 'bg-surah' : ''">
+                  <div x-show="surah.nomor != 1" class="my-5 ayah-item" id="bismillah">
+                    <div class="mb-3 card py-3 rounded-4 shadow" :class="isPlaying(`bismillah`) ? 'bg-surah border-islamic' : ''">
                       <div class="card-body">
-                        <h2 class="float-end text-dark" x-text="surah.bismillah.arab" style="font-size: 26px;"></h2>
+                        <span x-show="isPlaying(`bismillah`) && !isPaused" class="badge bg-islamic text-white playing-badge">
+                          <i class="bi bi-soundwave me-1"></i>Sedang diputar
+                        </span>
+                        <h2 class="float-end text-dark" x-text="bismillah.arab" :style="`font-size: ${arabSize}px;`"></h2>
                       </div>
                     </div>
                     <div class="d-block d-md-flex justify-content-between align-items-center">
                       <div class="text-black mb-3 mb-md-0 fw-medium">
                         <span>Artinya: </span>
-                        <span class="fst-italic" x-text="surah.bismillah.translation"></span>
+                        <span class="fst-italic" x-text="bismillah.translation"></span>
                       </div>
                       <div class="audio ms-0 ms-lg-4">
-                        <button id="bismillah" class="btn shadow rounded-3"
-                          @click="playAyahs(surah.bismillah.audio.alafasy, `bismillah`)"
-                          x-text="isPlaying(`bismillah`) ? 'Hentikan' : 'Dengarkan'"
-                          :class="isPlaying(`bismillah`) ? 'btn-danger' : 'btn-islamic'"></button>
+                        <button class="btn shadow rounded-3" @click="playTrack(`bismillah`)"
+                          :class="buttonClass(`bismillah`)">
+                          <i class="bi me-1" :class="buttonIcon(`bismillah`)"></i>
+                          <span x-text="buttonLabel(`bismillah`)"></span>
+                        </button>
                       </div>
 
                     </div>
@@ -122,30 +223,47 @@
 
 
 
-                  <template x-for="ayahs in surah.ayahs" :key="ayahs.number.inSurah">
-                    <div class="my-5">
+                  <template x-for="ayahs in surah.ayat" :key="ayahs.nomorAyat">
+                    <div class="my-5 ayah-item" :id="`ayah_${ayahs.nomorAyat}`">
                       <div class="mb-3 card py-3 rounded-4 shadow"
-                        :class="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'bg-surah' : ''">
+                        :class="isPlaying(`ayah_${ayahs.nomorAyat}`) ? 'bg-surah border-islamic' : ''">
                         <div class="card-body">
+                          <span x-show="isPlaying(`ayah_${ayahs.nomorAyat}`) && !isPaused"
+                            class="badge bg-islamic text-white playing-badge">
+                            <i class="bi bi-soundwave me-1"></i>Sedang diputar
+                          </span>
                           <div class="d-flex align-items-center float-end">
-                            <div class="circle-border me-3">
-                              <span class="h1 mb-0" x-text="changeToArabic(ayahs.number.inSurah)"></span>
+                            <div class="circle-border me-3 flex-shrink-0">
+                              <span class="h1 mb-0" x-text="changeToArabic(ayahs.nomorAyat)"></span>
                             </div>
-                            <h2 class="float-end text-dark" x-text="ayahs.arab" style="font-size: 26px;"></h2>
+                            <h2 class="float-end text-dark" x-text="ayahs.teksArab"
+                              :style="`font-size: ${arabSize}px; line-height: 1.8;`"></h2>
                           </div>
-
+                          <p x-show="showLatin" class="clearfix text-islamic text-end fst-italic pt-3 mb-0"
+                            x-text="ayahs.teksLatin"></p>
                         </div>
                       </div>
                       <div class="d-block d-md-flex justify-content-between align-items-center">
                         <div class="text-black mb-3 mb-md-0 fw-medium">
                           <span>Artinya: </span>
-                          <span class="fst-italic" x-text="ayahs.translation"></span>
+                          <span class="fst-italic" x-text="ayahs.teksIndonesia"></span>
                         </div>
-                        <div class="audio ms-0 ms-lg-4">
-                          <button :id="`ayah_${ayahs.number.inSurah}`" class="btn shadow rounded-3"
-                            @click="playAyahs(ayahs.audio.alafasy, `ayah_${ayahs.number.inSurah}`)"
-                            x-text="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'Hentikan' : 'Dengarkan'"
-                            :class="isPlaying(`ayah_${ayahs.number.inSurah}`) ? 'btn-danger' : 'btn-islamic'"></button>
+                        <div class="audio ms-0 ms-lg-4 d-flex gap-2 flex-shrink-0">
+                          <button type="button" class="btn btn-white shadow rounded-3" title="Tandai terakhir dibaca"
+                            @click="markLastRead(ayahs.nomorAyat)">
+                            <i class="bi text-islamic"
+                              :class="isLastRead(ayahs.nomorAyat) ? 'bi-bookmark-fill' : 'bi-bookmark'"></i>
+                          </button>
+                          <button type="button" class="btn btn-white shadow rounded-3" title="Salin ayat"
+                            @click="copyAyah(ayahs)">
+                            <i class="bi text-islamic"
+                              :class="copiedAyah === ayahs.nomorAyat ? 'bi-check-lg' : 'bi-clipboard'"></i>
+                          </button>
+                          <button class="btn shadow rounded-3" @click="playTrack(`ayah_${ayahs.nomorAyat}`)"
+                            :class="buttonClass(`ayah_${ayahs.nomorAyat}`)">
+                            <i class="bi me-1" :class="buttonIcon(`ayah_${ayahs.nomorAyat}`)"></i>
+                            <span x-text="buttonLabel(`ayah_${ayahs.nomorAyat}`)"></span>
+                          </button>
                         </div>
 
                       </div>
@@ -153,6 +271,71 @@
 
 
                   </template>
+                </div>
+
+                <div class="d-flex justify-content-between gap-3">
+                  <template x-if="surah.suratSebelumnya">
+                    <a :href="`/detail-surah.html?surah=${surah.suratSebelumnya.nomor}`"
+                      class="btn btn-white shadow rounded-3 text-islamic">
+                      <i class="bi bi-arrow-left me-2"></i>
+                      <span x-text="surah.suratSebelumnya.namaLatin"></span>
+                    </a>
+                  </template>
+                  <template x-if="surah.suratSelanjutnya">
+                    <a :href="`/detail-surah.html?surah=${surah.suratSelanjutnya.nomor}`"
+                      class="btn btn-white shadow rounded-3 text-islamic ms-auto">
+                      <span x-text="surah.suratSelanjutnya.namaLatin"></span>
+                      <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                  </template>
+                </div>
+
+                <div x-show="playingAyahId" x-transition.opacity class="audio-player bg-white shadow-lg"
+                  x-effect="document.body.classList.toggle('player-open', !!playingAyahId)">
+                  <div class="container py-2">
+                    <input type="range" class="form-range player-progress" min="0" :max="duration || 0" step="0.1"
+                      :value="currentTime" @input="seeking = true; currentTime = +$event.target.value"
+                      @change="seek($event.target.value)">
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                      <div class="me-auto" style="min-width: 0;">
+                        <div class="fw-semibold text-islamic text-truncate"
+                          x-text="`Surah ${surah.namaLatin} • ${trackLabel(playingAyahId)}`"></div>
+                        <small class="text-muted"
+                          x-text="`${qariList[qari]} • ${formatTime(currentTime)} / ${formatTime(duration)}`"></small>
+                      </div>
+                      <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-white btn-icon rounded-circle" title="Sebelumnya"
+                          @click="prevTrack()" :disabled="!hasPrev">
+                          <i class="bi bi-skip-start-fill"></i>
+                        </button>
+                        <button type="button" class="btn btn-islamic btn-icon rounded-circle btn-play"
+                          title="Putar / Jeda (Spasi)" @click="togglePause()">
+                          <span x-show="buffering" class="spinner-border spinner-border-sm"></span>
+                          <i x-show="!buffering" class="bi fs-3" :class="isPaused ? 'bi-play-fill' : 'bi-pause-fill'"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-icon rounded-circle" title="Berikutnya"
+                          @click="nextTrack()" :disabled="!hasNext">
+                          <i class="bi bi-skip-end-fill"></i>
+                        </button>
+                      </div>
+                      <div class="d-flex align-items-center gap-2 ms-md-3">
+                        <button type="button" class="btn btn-icon rounded-circle" title="Ulangi ayat"
+                          @click="repeatAyah = !repeatAyah" :class="repeatAyah ? 'btn-islamic' : 'btn-white'">
+                          <i class="bi bi-repeat-1"></i>
+                        </button>
+                        <button type="button" class="btn btn-icon rounded-circle" title="Lanjut otomatis ke ayat berikutnya"
+                          @click="playAll = !playAll" :class="playAll ? 'btn-islamic' : 'btn-white'">
+                          <i class="bi bi-collection-play"></i>
+                        </button>
+                        <button type="button" class="btn btn-white rounded-pill" title="Kecepatan" style="min-width: 60px;"
+                          @click="cycleSpeed()" x-text="`${speed}x`"></button>
+                        <button type="button" class="btn btn-white btn-icon rounded-circle" title="Tutup"
+                          @click="stopAudio()">
+                          <i class="bi bi-x-lg"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
               </div>
@@ -255,56 +438,319 @@
     var surah = url.searchParams.get("surah");
     console.log(surah);
 
-    // get api from  https://quran-api-id.vercel.app/surahs/{surah}
+    // get api from https://equran.id/api/v2/surat/{surah}
+    const qariList = {
+      '01': 'Abdullah Al-Juhany',
+      '02': 'Abdul Muhsin Al-Qasim',
+      '03': 'Abdurrahman as-Sudais',
+      '04': 'Ibrahim Al-Dossari',
+      '05': 'Misyari Rasyid Al-Afasi',
+      '06': 'Yasser Al-Dosari',
+    };
+    const qariFolder = {
+      '01': 'Abdullah-Al-Juhany',
+      '02': 'Abdul-Muhsin-Al-Qasim',
+      '03': 'Abdurrahman-as-Sudais',
+      '04': 'Ibrahim-Al-Dossari',
+      '05': 'Misyari-Rasyid-Al-Afasi',
+      '06': 'Yasser-Al-Dosari',
+    };
+    const storedQari = localStorage.getItem('qari');
+    const speedOptions = [0.75, 1, 1.25, 1.5];
+    const storedSpeed = Number(localStorage.getItem('speed'));
+    // Audio disimpan di luar state Alpine: proxy reaktif membuat method elemen native error (Illegal invocation)
+    const player = new Audio();
+
     function detailSurah() {
       return {
         surah: [],
         loading: true,
+        error: false,
         playingAyahId: null, // Menyimpan ID elemen yang sedang diputar
+        playAll: false,
+        isPaused: true,
+        buffering: false,
+        seeking: false,
+        currentTime: 0,
+        duration: 0,
+        repeatAyah: false,
+        speed: speedOptions.includes(storedSpeed) ? storedSpeed : 1,
+        showDescription: false,
+        description: '',
+        qariList: qariList,
+        qari: qariList[storedQari] ? storedQari : '05',
+        arabSize: Number(localStorage.getItem('arabSize')) || 26,
+        showLatin: localStorage.getItem('showLatin') === 'true',
+        jumpAyah: null,
+        copiedAyah: null,
+        lastRead: JSON.parse(localStorage.getItem('lastRead') || 'null'),
+        // equran.id tidak menyediakan bismillah terpisah, diambil dari Al-Fatihah ayat 1
+        bismillah: {
+          arab: 'بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ',
+          translation: 'Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang.',
+        },
+
+        get bismillahAudio() {
+          return `https://cdn.equran.id/audio-partial/${qariFolder[this.qari]}/001001.mp3`;
+        },
+
+        get playlist() {
+          const items = this.surah.ayat.map(ayah => ({
+            id: `ayah_${ayah.nomorAyat}`,
+            url: ayah.audio[this.qari],
+          }));
+          if (this.surah.nomor != 1) {
+            items.unshift({ id: 'bismillah', url: this.bismillahAudio });
+          }
+          return items;
+        },
+
+        get currentIndex() {
+          return this.playlist.findIndex(item => item.id === this.playingAyahId);
+        },
+
+        get hasPrev() {
+          return this.currentIndex > 0;
+        },
+
+        get hasNext() {
+          const index = this.currentIndex;
+          return index >= 0 && index < this.playlist.length - 1;
+        },
 
         connect() {
-          fetch(`https://quran-api-id.vercel.app/surahs/${surah}`)
+          this.bindPlayer();
+          fetch(`https://equran.id/api/v2/surat/${encodeURIComponent(surah)}`)
             .then(response => response.json())
             .then(data => {
-              this.surah = data;
+              if (data.code !== 200) throw new Error(data.message);
+              this.surah = data.data;
+              this.description = new DOMParser().parseFromString(data.data.deskripsi, 'text/html').body.textContent;
+              document.title = `Surah ${data.data.namaLatin} | Islamic Web Telkom Surabaya`;
               this.loading = false;
+              this.$nextTick(() => this.scrollToElement(window.location.hash.slice(1)));
             })
             .catch(error => {
               console.error('Error fetching data:', error);
+              this.error = true;
               this.loading = false;
             });
         },
 
-        playAyahs(url, ayahId) {
-          try {
-            if (this.playingAyahId === ayahId) {
-              this.currentPlayAyah.pause();
-              this.playingAyahId = null;
-              return;
-            }
+        bindPlayer() {
+          player.addEventListener('timeupdate', () => {
+            if (!this.seeking) this.currentTime = player.currentTime;
+          });
+          player.addEventListener('loadedmetadata', () => this.duration = player.duration);
+          player.addEventListener('waiting', () => this.buffering = true);
+          player.addEventListener('playing', () => {
+            this.buffering = false;
+            this.isPaused = false;
+          });
+          player.addEventListener('pause', () => this.isPaused = true);
+          player.addEventListener('ended', () => this.handleEnded());
+          player.addEventListener('error', () => {
+            if (!this.playingAyahId) return;
+            console.error('Error playing audio:', player.error);
+            this.buffering = false;
+            this.isPaused = true;
+          });
 
-            if (this.currentPlayAyah) {
-              this.currentPlayAyah.pause();
+          document.addEventListener('keydown', event => {
+            if (!this.playingAyahId || ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].includes(event.target.tagName)) return;
+            if (event.code === 'Space') {
+              event.preventDefault();
+              this.togglePause();
+            } else if (event.code === 'ArrowRight') {
+              this.nextTrack();
+            } else if (event.code === 'ArrowLeft') {
+              this.prevTrack();
             }
-            this.currentPlayAyah = new Audio();
-            this.currentPlayAyah.src = url;
-            this.currentPlayAyah.addEventListener('canplay', () => {
-              this.currentPlayAyah.play();
-            });
-            this.playingAyahId = ayahId;
+          });
 
-            this.currentPlayAyah.onended = () => {
-              this.playingAyahId = null;
-            };
-          } catch (error) {
-            console.error('Error playing audio:', error);
-            this.playingAyahId = null;
+          if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('play', () => this.togglePause());
+            navigator.mediaSession.setActionHandler('pause', () => this.togglePause());
+            navigator.mediaSession.setActionHandler('previoustrack', () => this.prevTrack());
+            navigator.mediaSession.setActionHandler('nexttrack', () => this.nextTrack());
           }
         },
 
+        playTrack(id, scroll = false) {
+          if (this.playingAyahId === id) {
+            this.togglePause();
+            return;
+          }
+          const track = this.playlist.find(item => item.id === id);
+          if (!track) return;
+
+          this.playingAyahId = id;
+          this.currentTime = 0;
+          this.duration = 0;
+          this.buffering = true;
+          this.isPaused = false;
+          player.src = track.url;
+          player.defaultPlaybackRate = this.speed;
+          player.playbackRate = this.speed;
+          player.play().catch(error => {
+            if (error.name === 'AbortError') return;
+            console.error('Error playing audio:', error);
+            this.buffering = false;
+            this.isPaused = true;
+          });
+
+          if (scroll) this.scrollToElement(id);
+          if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+              title: `${this.surah.namaLatin} - ${this.trackLabel(id)}`,
+              artist: this.qariList[this.qari],
+              album: 'Al-Quran',
+            });
+          }
+        },
+
+        togglePause() {
+          if (!this.playingAyahId) return;
+          if (player.paused) {
+            player.play().catch(error => console.error('Error playing audio:', error));
+          } else {
+            player.pause();
+          }
+        },
+
+        handleEnded() {
+          if (this.repeatAyah) {
+            player.currentTime = 0;
+            player.play();
+          } else if (this.playAll && this.hasNext) {
+            this.nextTrack();
+          } else {
+            this.isPaused = true;
+          }
+        },
+
+        nextTrack() {
+          if (this.hasNext) this.playTrack(this.playlist[this.currentIndex + 1].id, true);
+        },
+
+        prevTrack() {
+          if (this.hasPrev) this.playTrack(this.playlist[this.currentIndex - 1].id, true);
+        },
+
+        seek(value) {
+          player.currentTime = Number(value);
+          this.currentTime = Number(value);
+          this.seeking = false;
+        },
+
+        stopAudio() {
+          player.pause();
+          this.playingAyahId = null;
+          this.playAll = false;
+          this.currentTime = 0;
+          this.duration = 0;
+          this.buffering = false;
+        },
+
+        togglePlayAll() {
+          if (this.playAll && this.playingAyahId) {
+            this.stopAudio();
+            return;
+          }
+          this.playAll = true;
+          if (this.playingAyahId) {
+            if (player.paused) this.togglePause();
+            return;
+          }
+          this.playTrack(this.playlist[0].id, true);
+        },
+
+        changeQari() {
+          this.savePreference('qari', this.qari);
+          const id = this.playingAyahId;
+          if (!id) return;
+          this.playingAyahId = null;
+          this.playTrack(id);
+        },
+
+        cycleSpeed() {
+          this.speed = speedOptions[(speedOptions.indexOf(this.speed) + 1) % speedOptions.length];
+          player.defaultPlaybackRate = this.speed;
+          player.playbackRate = this.speed;
+          this.savePreference('speed', this.speed);
+        },
 
         isPlaying(ayahId) {
           return this.playingAyahId === ayahId;
+        },
+
+        trackLabel(id) {
+          return id === 'bismillah' ? 'Bismillah' : `Ayat ${(id || '').replace('ayah_', '')} / ${this.surah.jumlahAyat}`;
+        },
+
+        buttonLabel(id) {
+          if (!this.isPlaying(id)) return 'Dengarkan';
+          return this.isPaused ? 'Lanjutkan' : 'Jeda';
+        },
+
+        buttonIcon(id) {
+          return this.isPlaying(id) && !this.isPaused ? 'bi-pause-fill' : 'bi-play-fill';
+        },
+
+        buttonClass(id) {
+          return this.isPlaying(id) && !this.isPaused ? 'btn-danger' : 'btn-islamic';
+        },
+
+        formatTime(seconds) {
+          if (!Number.isFinite(seconds)) return '0:00';
+          const total = Math.floor(seconds);
+          return `${Math.floor(total / 60)}:${(total % 60).toString().padStart(2, '0')}`;
+        },
+
+        scrollToElement(id) {
+          const element = id && document.getElementById(id);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        },
+
+        goToAyah(number) {
+          if (!Number.isInteger(number) || number < 1 || number > this.surah.jumlahAyat) return;
+          history.replaceState(null, '', `#ayah_${number}`);
+          this.scrollToElement(`ayah_${number}`);
+        },
+
+        savePreference(key, value) {
+          localStorage.setItem(key, value);
+        },
+
+        markLastRead(number) {
+          this.lastRead = { nomor: this.surah.nomor, namaLatin: this.surah.namaLatin, ayat: number };
+          localStorage.setItem('lastRead', JSON.stringify(this.lastRead));
+        },
+
+        isLastRead(number) {
+          return this.lastRead && this.lastRead.nomor === this.surah.nomor && this.lastRead.ayat === number;
+        },
+
+        copyAyah(ayah) {
+          const text = `${ayah.teksArab}\n\n${ayah.teksIndonesia}\n(QS. ${this.surah.namaLatin}: ${ayah.nomorAyat})`;
+          const done = () => {
+            this.copiedAyah = ayah.nomorAyat;
+            setTimeout(() => this.copiedAyah = null, 2000);
+          };
+          // navigator.clipboard hanya tersedia di HTTPS/localhost
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(done);
+            return;
+          }
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          textarea.remove();
+          done();
         },
       };
     }
