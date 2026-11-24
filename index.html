@@ -38,6 +38,111 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="./assets/style.css">
+  <style>
+    .hero-section {
+      background: linear-gradient(180deg, #F0F4F2 0%, #fff 100%);
+      border-radius: 2rem;
+    }
+
+    .hero-img {
+      animation: hero-float 5s ease-in-out infinite;
+    }
+
+    @keyframes hero-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-img { animation: none; }
+    }
+
+    .pill-islamic {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background-color: #E8FFEC;
+      color: #00602e;
+      border-radius: 999px;
+      padding: .4rem 1rem;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: #00602e;
+      line-height: 1.2;
+    }
+
+    .feature-card {
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: #00602e !important;
+      box-shadow: 0 1rem 2rem rgba(0, 96, 46, .15) !important;
+    }
+
+    .feature-card img {
+      height: 120px;
+      object-fit: contain;
+    }
+
+    .feature-link {
+      color: #00602e;
+      font-weight: 600;
+    }
+
+    .ayat-arab {
+      font-size: 28px;
+      line-height: 2;
+    }
+
+    .ayat-slider {
+      min-height: 320px;
+    }
+
+    /* Jangan pakai utility d-flex di elemen x-show: !important-nya mengalahkan display:none dari Alpine */
+    .ayat-loading {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-outline-white {
+      background-color: transparent;
+      color: #fff;
+      border: 2px solid #fff;
+      font-weight: 600;
+    }
+
+    .btn-outline-white:hover {
+      background-color: #fff;
+      color: #00602e;
+    }
+
+    .cta-band {
+      background-color: #00602e;
+      border-radius: 1.5rem;
+    }
+
+    .btn-outline-islamic {
+      color: #00602e;
+      border: 2px solid #00602e;
+      font-weight: 600;
+    }
+
+    .btn-outline-islamic:hover {
+      background-color: #00602e;
+      color: #fff;
+    }
+  </style>
 </head>
 
 <body>
@@ -71,17 +176,154 @@
     </nav>
     <!-- End Navbar -->
 
-    <section class="py-5 my-5">
-      <div class="container">
+    <section class="container mb-5">
+      <div class="hero-section px-4 px-lg-5 py-5" x-data="heroInfo()">
         <div class="row align-items-center">
-          <div class="col-12 col-md-5">
-            <img class="img-fluid" src="./assets/images/hero.png" alt="Hero Image" />
-          </div>
-          <div class="col-12 col-md-7">
+          <div class="col-12 col-md-7 order-2 order-md-1">
+            <span class="pill-islamic mb-4">
+              <i class="bi bi-calendar3"></i>
+              <span x-text="hijriDate"></span>
+            </span>
             <h1 class="heading-text">Jalani Hidup Penuh Makna</h1>
             <div class="h1 heading-text mb-4">Bangun <span class="text-islamic">Jalan Menuju Surga</span></div>
-            <p class="w-75 fs-3">Amalan yang paling dicintai Allah adalah yang dilakukan secara konsisten, meskipun
-              sedikit.</p>
+            <p class="fs-3 mb-4" style="max-width: 560px;">Amalan yang paling dicintai Allah adalah yang dilakukan
+              secara konsisten, meskipun sedikit.</p>
+            <div class="d-flex flex-wrap gap-3 mb-4">
+              <a href="/surah.html" class="btn btn-islamic btn-lg rounded-3">
+                <i class="bi bi-book me-2"></i>Baca Al-Quran
+              </a>
+              <a href="/jadwal-sholat.html" class="btn btn-outline-islamic btn-lg rounded-3">
+                <i class="bi bi-clock me-2"></i>Jadwal Sholat
+              </a>
+            </div>
+            <template x-if="lastRead">
+              <a :href="`/detail-surah.html?surah=${lastRead.nomor}#ayah_${lastRead.ayat}`"
+                class="pill-islamic text-decoration-none mb-4">
+                <i class="bi bi-bookmark-fill"></i>
+                <span x-text="`Lanjutkan: Surah ${lastRead.namaLatin} ayat ${lastRead.ayat}`"></span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </template>
+            <div class="row mt-2 g-3" style="max-width: 480px;">
+              <div class="col-4">
+                <div class="stat-number">114</div>
+                <div class="text-muted">Surah</div>
+              </div>
+              <div class="col-4">
+                <div class="stat-number">6.236</div>
+                <div class="text-muted">Ayat</div>
+              </div>
+              <div class="col-4">
+                <div class="stat-number">500+</div>
+                <div class="text-muted">Kota</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-5 order-1 order-md-2 mb-4 mb-md-0">
+            <img class="img-fluid hero-img" src="./assets/images/hero.png" alt="Hero Image" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5" style="background:#F0F4F2;" x-data="randomAyat()" x-init="connect()">
+      <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+          <div>
+            <p class="text-islamic fw-semibold fs-2 mb-1">Ayat Pilihan</p>
+            <h1 class="heading-showcase mb-0">Renungan Hari Ini</h1>
+          </div>
+          <button type="button" class="btn btn-islamic rounded-3" @click="connect()" :disabled="loading">
+            <span x-show="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <i x-show="!loading" class="bi bi-shuffle me-2"></i>Acak Ayat
+          </button>
+        </div>
+        <div class="bg-white shadow border-wide rounded-4 position-relative">
+          <div x-show="loading" class="ayat-loading bg-white rounded-4">
+            <div class="space-x">
+              <div class="spinner-grow text-islamic" role="status"></div>
+              <div class="spinner-grow text-islamic" role="status"></div>
+              <div class="spinner-grow text-islamic" role="status"></div>
+            </div>
+          </div>
+          <div class="swiper mySwiper py-4 ayat-slider" x-ref="slider">
+            <div class="swiper-wrapper">
+              <template x-for="(item, index) in items" :key="`${item.surah}-${item.ayat}`">
+                <div class="swiper-slide px-4 px-lg-5">
+                  <div class="row align-items-center justify-content-center">
+                    <div class="col-12 col-lg-2">
+                      <img class="img-fluid d-block mx-auto" src="./assets/images/quran-slideshow.png">
+                    </div>
+                    <div class="col-12 col-lg-3 mb-4 mb-lg-0">
+                      <h2 class="fw-bolder" style="font-size: 24px;">Al-Quran</h2>
+                      <div class="text-islamic fw-bolder mb-2" style="font-size: 30px;" x-text="`Surah ${item.namaLatin}`"></div>
+                      <div class="bg-islamic text-white rounded-4 w-50 text-center py-1 fw-semibold mb-3"
+                        x-text="`Ayat ${item.ayat}`"></div>
+                      <div class="d-flex flex-wrap gap-2">
+                        <button type="button" x-show="item.audio" class="btn btn-sm rounded-3" @click="toggleAudio(index)"
+                          :class="playingIndex === index ? 'btn-danger' : 'btn-islamic'">
+                          <i class="bi me-1" :class="playingIndex === index ? 'bi-stop-fill' : 'bi-play-fill'"></i>
+                          <span x-text="playingIndex === index ? 'Hentikan' : 'Dengarkan'"></span>
+                        </button>
+                        <a :href="`/detail-surah.html?surah=${item.surah}#ayah_${item.ayat}`"
+                          class="btn btn-sm btn-outline-islamic rounded-3">Baca Surah</a>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                      <h2 class="text-end mb-4 ayat-arab" dir="rtl" x-text="item.arab"></h2>
+                      <p class="mb-0">Artinya: </p>
+                      <p class="fst-italic" x-text="`&quot;${item.arti}&quot;`"></p>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <div class="swiper-button-next d-none d-lg-block"><img src="./assets/images/arrow.png" style="height: 40px;"></div>
+            <div class="swiper-button-prev d-none d-lg-block"><img src="./assets/images/arrow.png" style="rotate: 180deg; height: 40px;"></div>
+
+            <div class="swiper-pagination d-block"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="my-5 py-4">
+      <div class="container">
+        <div class="text-center">
+          <p class="text-islamic fw-semibold fs-2">Fitur</p>
+          <h1 class="heading-showcase">Islamic Web</h1>
+          <p class="mt-3">Fitur-fitur yang kami sediakan untuk membantu Anda menuju jalan perdamaian</p>
+        </div>
+        <div class="mt-5 row g-4 justify-content-center">
+          <div class="col-12 col-md-6 col-lg-4">
+            <a href="/surah.html" class="card feature-card shadow rounded-4 h-100 border-wide text-decoration-none text-dark">
+              <div class="card-body text-center py-4">
+                <img class="img-fluid" src="./assets/images/quran.png">
+                <h3 class="my-3">Daftar Surah</h3>
+                <p>Jelajahi keindahan dan kebijaksanaan Al-Quran melalui 114 surah.</p>
+                <span class="feature-link">Lihat Surah <i class="bi bi-arrow-right"></i></span>
+              </div>
+            </a>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <a href="/detail-surah.html?surah=1" class="card feature-card shadow rounded-4 h-100 border-wide text-decoration-none text-dark">
+              <div class="card-body text-center py-4">
+                <img class="img-fluid" src="./assets/images/ayat.png">
+                <h3 class="my-3">Ayat & Terjemahan</h3>
+                <p>Tumbuhkan kecintaan dengan Al-Quran melalui ayat dan terjemahan.</p>
+                <span class="feature-link">Mulai Membaca <i class="bi bi-arrow-right"></i></span>
+              </div>
+            </a>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <a href="/jadwal-sholat.html" class="card feature-card shadow rounded-4 h-100 border-wide text-decoration-none text-dark">
+              <div class="card-body text-center py-4">
+                <img class="img-fluid" src="./assets/images/clock.png">
+                <h3 class="my-3">Jadwal Sholat</h3>
+                <p>Tingkatkan ketakwaan dan kedisplinan dengan melaksanakan sholat tepat waktu.</p>
+                <span class="feature-link">Cek Jadwal <i class="bi bi-arrow-right"></i></span>
+              </div>
+            </a>
           </div>
         </div>
       </div>
@@ -90,134 +332,39 @@
     <section class="py-5" style="background:#F0F4F2; ">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-12 col-lg-6">
-            <div class="text-start text-lg-end">
-              <p class="text-islamic fw-semibold fs-2">Tentang Kami</p>
-              <h1 class="heading-showcase">Mencari ilmu adalah Kewajiban setiap muslim</h1>
-              <p class="mt-3">Kebangkitan umat Islam ke puncak peradaban dalam kurun waktu empat dekade didasari oleh
-                penekanan Islam
-                pada pembelajaran. Hal ini terlihat jelas ketika kita mencermati Al-Qur'an dan hadis Nabi Muhammad SAW
-                yang sarat dengan referensi pembelajaran, pendidikan, dan observasi.</p>
-            </div>
-
-          </div>
-          <div class="col-12 col-lg-6">
-            <div class="wrapper">
-              <div class="youtube rounded-4" data-embed="zC4ecR65PP8">
+          <div class="col-12 col-lg-6 order-2 order-lg-1">
+            <div class="wrapper my-4 my-lg-0">
+              <div class="youtube rounded-4 shadow" data-embed="zC4ecR65PP8">
                 <div class="play-button"></div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="my-5">
-      <div class="container">
-        <div class="text-center">
-          <p class="text-islamic fw-semibold fs-2">Fitur</p>
-          <h1 class="heading-showcase">Islamic Web</h1>
-          <p class="mt-3">Fitur-fitur yang kami sediakan untuk membantu Anda menuju jalan perdamaian</p>
-        </div>
-        <div class="mt-5 row justify-content-center">
-          <div class="col-12 col-lg-3 mx-3 mb-3 mb-lg-0">
-            <div class="card shadow rounded-4 h-100 border-wide">
-              <div class="card-body text-center py-4">
-                <img class="img-fluid" src="./assets/images/quran.png">
-                <h3 class="my-3">Daftar Surah</h3>
-                <p>Jelajahi keindahan dan kebijaksanaan Al-Quran melalui 114 surah.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-lg-3 mx-3 mb-3 mb-lg-0">
-            <div class="card shadow rounded-4 h-100 border-wide">
-              <div class="card-body text-center py-4">
-                <img class="img-fluid" src="./assets/images/ayat.png">
-                <h3 class="my-3">Ayat & Terjemahan</h3>
-                <p>Tumbuhkan kecintaan dengan Al-Quran melalui ayat dan terjemahan.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-lg-3 mx-3 mb-3 mb-lg-0">
-            <div class="card shadow rounded-4 h-100 border-wide">
-              <div class="card-body text-center py-4">
-                <img class="img-fluid" src="./assets/images/clock.png">
-                <h3 class="my-3">Jadwal Sholat</h3>
-                <p>Tingkatkan ketakwaan dan kedisplinan dengan melaksanakan sholat tepat waktu.</p>
-              </div>
-            </div>
+          <div class="col-12 col-lg-6 order-1 order-lg-2">
+            <p class="text-islamic fw-semibold fs-2">Tentang Kami</p>
+            <h1 class="heading-showcase">Mencari ilmu adalah Kewajiban setiap muslim</h1>
+            <p class="mt-3">Kebangkitan umat Islam ke puncak peradaban dalam kurun waktu empat dekade didasari oleh
+              penekanan Islam
+              pada pembelajaran. Hal ini terlihat jelas ketika kita mencermati Al-Qur'an dan hadis Nabi Muhammad SAW
+              yang sarat dengan referensi pembelajaran, pendidikan, dan observasi.</p>
+            <a href="/tentang-kami.html" class="btn btn-outline-islamic rounded-3 mt-2">
+              Selengkapnya <i class="bi bi-arrow-right ms-1"></i>
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="py-5" style="background:#F0F4F2;">
-      <div class="container">
-        <div class="bg-white shadow border-wide rounded-4 ">
-          <div class="swiper mySwiper py-4">
-            <div class="swiper-wrapper">
-
-              <div class="swiper-slide px-4 cursor-pointer">
-                <div class="row align-items-center justify-content-center">
-                  <div class="col-12 col-lg-2">
-                    <img class="img-fluid d-block mx-auto" src="./assets/images/quran-slideshow.png">
-                  </div>
-                  <div class="col-12 col-lg-3 mb-4 mb-lg-0">
-                    <h2 class="fw-bolder" style="font-size: 24px;">Al-Quran</h2>
-                    <div class="text-islamic fw-bolder mb-2" style="font-size: 30px;">Surah Az-Zumar</div>
-                    <div class="bg-islamic text-white rounded-4 w-50 text-center py-1 fw-semibold">Ayat 44</div>
-                  </div>
-                  <div class="col-12 col-lg-6">
-                    <h2 class="text-end mb-4" style="font-size: 28px;">قُلْ لِّلّٰهِ الشَّفَاعَةُ جَمِيْعًا ۗ لَهٗ مُلْكُ السَّمٰوٰتِ وَالْاَرْضِۗ ثُمَّ اِلَيْهِ تُرْجَعُوْنَ</h2>
-                    <p class="mb-0">Artinya: </p>
-                    <p class="fst-italic">"Katakanlah, “Pertolongan itu hanya milik Allah semuanya. Dia memiliki kerajaan langit dan bumi. Kemudian kepada-Nya kamu dikembalikan."</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="swiper-slide px-4 cursor-pointer">
-                <div class="row align-items-center justify-content-center">
-                  <div class="col-12 col-lg-2">
-                    <img class="img-fluid d-block mx-auto" src="./assets/images/quran-slideshow.png">
-                  </div>
-                  <div class="col-12 col-lg-3 mb-4 mb-lg-0">
-                    <h2 class="fw-bolder" style="font-size: 24px;">Al-Quran</h2>
-                    <div class="text-islamic fw-bolder mb-2" style="font-size: 30px;">Surah Al-Insyiqaq</div>
-                    <div class="bg-islamic text-white rounded-4 w-50 text-center py-1 fw-semibold">Ayat 6</div>
-                  </div>
-                  <div class="col-12 col-lg-6">
-                    <h2 class="text-end mb-4" style="font-size: 28px;">يَاأَيُّهَا الْإِنْسَانُ إِنَّكَ كَادِحٌ إِلَى رَبِّكَ كَدْحًا فَمُلَاقِيهِ</h2>
-                    <p class="mb-0">Artinya: </p>
-                    <p class="fst-italic">"Wahai manusia! Sesungguhnya kamu telah bekerja keras menuju Tuhanmu, maka kamu akan menemui-Nya."</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="swiper-slide px-4 cursor-pointer">
-                <div class="row align-items-center justify-content-center">
-                  <div class="col-12 col-lg-2">
-                    <img class="img-fluid d-block mx-auto" src="./assets/images/quran-slideshow.png">
-                  </div>
-                  <div class="col-12 col-lg-3 mb-4 mb-lg-0">
-                    <h2 class="fw-bolder" style="font-size: 24px;">Al-Quran</h2>
-                    <div class="text-islamic fw-bolder mb-2" style="font-size: 30px;">Surah Al-Kahfi</div>
-                    <div class="bg-islamic text-white rounded-4 w-50 text-center py-1 fw-semibold">Ayat 66</div>
-                  </div>
-                  <div class="col-12 col-lg-6">
-                    <h2 class="text-end mb-4" style="font-size: 28px;">قَالَ لَهٗ مُوۡسٰى هَلۡ اَتَّبِعُكَ عَلٰٓى اَنۡ تُعَلِّمَنِ مِمَّا عُلِّمۡتَ رُشۡدًا</h2>
-                    <p class="mb-0">Artinya: </p>
-                    <p class="fst-italic">"Musa berkata kepadanya, “Bolehkah aku mengikutimu agar engkau mengajarkan kepadaku (ilmu yang benar) yang telah diajarkan kepadamu (untuk menjadi) petunjuk?"</p>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-            <div class="swiper-button-next d-none d-lg-block"><img src="./assets/images/arrow.png" style="height: 40px;"></div>
-            <div class="swiper-button-prev d-none d-lg-block"><img src="./assets/images/arrow.png" style="rotate: 180deg; height: 40px;"></div>
-
-            <div class="swiper-pagination d-block"></div>
-          </div>
-          
+    <section class="container my-5">
+      <div class="cta-band text-white text-center px-4 py-5">
+        <h2 class="text-white mb-2" style="font-size: 32px;">Mulai Hari Ini dengan Al-Quran</h2>
+        <p class="mb-4 fs-3">Satu ayat setiap hari, konsisten menuju kebaikan.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a href="/surah.html" class="btn btn-white btn-lg rounded-3 text-islamic fw-semibold">
+            <i class="bi bi-book me-2"></i>Baca Sekarang
+          </a>
+          <a href="/jadwal-sholat.html" class="btn btn-outline-white btn-lg rounded-3">
+            <i class="bi bi-geo-alt me-2"></i>Jadwal di Kotaku
+          </a>
         </div>
       </div>
     </section>
@@ -310,15 +457,139 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script src="./assets/script.js"></script>
   <script>
-    var swiper = new Swiper(".mySwiper", {
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
+    const RANDOM_AYAT_COUNT = 3;
+    const TOTAL_SURAH = 114;
+
+    const fallbackAyat = [
+      {
+        surah: 39, namaLatin: 'Az-Zumar', ayat: 44, audio: null,
+        arab: 'قُلْ لِّلّٰهِ الشَّفَاعَةُ جَمِيْعًا ۗ لَهٗ مُلْكُ السَّمٰوٰتِ وَالْاَرْضِۗ ثُمَّ اِلَيْهِ تُرْجَعُوْنَ',
+        arti: 'Katakanlah, “Pertolongan itu hanya milik Allah semuanya. Dia memiliki kerajaan langit dan bumi. Kemudian kepada-Nya kamu dikembalikan.',
       },
-      pagination: {
-        el: ".swiper-pagination",
+      {
+        surah: 84, namaLatin: 'Al-Insyiqaq', ayat: 6, audio: null,
+        arab: 'يَاأَيُّهَا الْإِنْسَانُ إِنَّكَ كَادِحٌ إِلَى رَبِّكَ كَدْحًا فَمُلَاقِيهِ',
+        arti: 'Wahai manusia! Sesungguhnya kamu telah bekerja keras menuju Tuhanmu, maka kamu akan menemui-Nya.',
       },
-    });
+      {
+        surah: 18, namaLatin: 'Al-Kahfi', ayat: 66, audio: null,
+        arab: 'قَالَ لَهٗ مُوۡسٰى هَلۡ اَتَّبِعُكَ عَلٰٓى اَنۡ تُعَلِّمَنِ مِمَّا عُلِّمۡتَ رُشۡدًا',
+        arti: 'Musa berkata kepadanya, “Bolehkah aku mengikutimu agar engkau mengajarkan kepadaku (ilmu yang benar) yang telah diajarkan kepadamu (untuk menjadi) petunjuk?',
+      },
+    ];
+
+    // Swiper & Audio disimpan di luar state Alpine agar tidak dibungkus proxy reaktif
+    let ayatSwiper = null;
+    const ayatPlayer = new Audio();
+
+    function randomInt(max) {
+      return Math.floor(Math.random() * max);
+    }
+
+    function pickRandomSurahNumbers(count) {
+      const numbers = new Set();
+      while (numbers.size < count) {
+        numbers.add(randomInt(TOTAL_SURAH) + 1);
+      }
+      return [...numbers];
+    }
+
+    function fetchRandomAyat(surahNumber) {
+      return fetch(`https://equran.id/api/v2/surat/${surahNumber}`)
+        .then(response => response.json())
+        .then(({ code, data }) => {
+          if (code !== 200) throw new Error(`Surah ${surahNumber} gagal dimuat`);
+          const ayat = data.ayat[randomInt(data.ayat.length)];
+          return {
+            surah: data.nomor,
+            namaLatin: data.namaLatin,
+            ayat: ayat.nomorAyat,
+            arab: ayat.teksArab,
+            arti: ayat.teksIndonesia,
+            audio: ayat.audio['05'],
+          };
+        });
+    }
+
+    function heroInfo() {
+      let hijriDate = '';
+      try {
+        hijriDate = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', {
+          day: 'numeric', month: 'long', year: 'numeric',
+        }).format(new Date());
+      } catch (error) {
+        hijriDate = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+      return {
+        hijriDate,
+        lastRead: JSON.parse(localStorage.getItem('lastRead') || 'null'),
+      };
+    }
+
+    function randomAyat() {
+      return {
+        items: [],
+        loading: true,
+        playingIndex: null,
+
+        connect() {
+          this.loading = true;
+          this.stopAudio();
+          Promise.all(pickRandomSurahNumbers(RANDOM_AYAT_COUNT).map(fetchRandomAyat))
+            .then(items => this.items = items)
+            .catch(error => {
+              console.error('Error fetching data:', error);
+              this.items = fallbackAyat;
+            })
+            .finally(() => {
+              this.loading = false;
+              this.$nextTick(() => this.mountSwiper());
+            });
+        },
+
+        mountSwiper() {
+          if (ayatSwiper) {
+            ayatSwiper.update();
+            ayatSwiper.slideTo(0, 0);
+            ayatSwiper.autoplay.start();
+            return;
+          }
+          ayatSwiper = new Swiper(this.$refs.slider, {
+            autoHeight: true,
+            rewind: true,
+            autoplay: { delay: 8000, pauseOnMouseEnter: true, disableOnInteraction: false },
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true,
+            },
+          });
+        },
+
+        toggleAudio(index) {
+          if (this.playingIndex === index) {
+            this.stopAudio();
+            return;
+          }
+          ayatPlayer.src = this.items[index].audio;
+          ayatPlayer.onended = () => this.stopAudio();
+          ayatPlayer.play().catch(error => {
+            if (error.name !== 'AbortError') console.error('Error playing audio:', error);
+          });
+          this.playingIndex = index;
+          if (ayatSwiper) ayatSwiper.autoplay.stop();
+        },
+
+        stopAudio() {
+          ayatPlayer.pause();
+          this.playingIndex = null;
+          if (ayatSwiper) ayatSwiper.autoplay.start();
+        },
+      };
+    }
   </script>
 </body>
 
